@@ -8,7 +8,7 @@ $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 
 
 
-include ("top.php");
+include 'include/top.php';
 // SECTION: 1 Initialize variables
 // 1s. variables for the classroom purposes to help find errors
 $debug = false;
@@ -282,8 +282,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
     </article>
     <?php
 }
-// end body submit
-include ("footer.php");
+    include 'include/footer.php';
 ?>
 </body>
 </html>

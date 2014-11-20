@@ -1,5 +1,5 @@
 <?php
-include "top.php";
+include 'include/top.php';
 ?>
 
 <body>  
@@ -8,6 +8,7 @@ include "top.php";
 
 
 </body>
-    <?php include 'footer.php';
+    <?php 
+        include 'include/footer.php';
     ?>
 </html>
