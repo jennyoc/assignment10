@@ -1,0 +1,179 @@
+/******CSS Designed By Jennifer Magie******
+
+/********** - Main Page Layout - **********/
+body{
+    margin: 36px auto;
+    width: 90%;
+    background-color: aliceblue;
+}
+
+h1{
+    color: darkcyan;
+    font-family: "Raleway", Helvetica, Arial, sans-serif;
+    font-size: 40px;
+}
+
+#page{
+    margin: 0 auto 53px;
+    width: 93.75%; /* 900px / 960px */
+}
+#main{
+    float: left;
+    width: 62.8888889%; /* 566px / 900px */
+}
+//********** - Header Section - **********//
+
+
+h2{
+    color: darkcyan;
+    font-family: "Raleway", Helvetica, Arial, sans-serif;
+}
+
+//********** - Navigation Section - **********//
+nav ol {
+    padding-left: 5.33333333%; /* 48px / 900px */
+    font-family: sans-serif
+}
+nav ol li{
+    display: inline-block;
+    list-style-type: none;
+    padding-right: 3em;
+}
+
+nav a{
+    position: relative;
+    vertical-align: top;
+    margin-left: 2em;
+    width: 40%;
+    height: 40px;
+    padding: 0.5em;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(black, .25);
+    background: #f0776c;
+    border: 0;
+    border-bottom: 2px solid #d76b60;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: inset 0 -2px #d76b60;
+
+}
+
+/********** - - **********/
+article h1, article p, article table{
+    padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
+}
+
+/***************** Footer Section ********************/
+footer{
+    clear: both;
+    padding: 0.8em 5.33333333%; /* 48px / 900px */
+    line-height: 0.1em;
+    text-align: center;
+    font-family: "Raleway", Helvetica, Arial, sans-serif;
+    color: darkcyan;
+}
+
+/***************** Form Section ********************/
+#form article#main{
+    float: none;
+    margin: auto; /* because of the fixed width this centers the form */
+    text-align: left;
+    max-width: 600px; /* not repsonive but fixed */
+}
+
+/* need to clear any floats that may exist */
+fieldset{
+    clear: both;
+}
+fieldset.wrapper {
+    margin: auto;
+}
+/* just pushes content to left side of the box. */
+fieldset.search{
+    float: left;
+    margin-left: 4em;
+    border: none;
+}
+fieldset.buttons{
+    border:none;
+}
+
+/* when you look at the labels this pushes then next to the input and right
+aligns them. Display block means they are each on their own line. */
+fieldset.search label{
+    display: block;
+    text-align: right;
+    font-family: 'Goudy Bookletter 1911', Georgia, Times, serif;
+    font-size: 16px;
+    line-height: 25px;
+    color: darkcyan;
+    /* pushes the text to the right where they line up */
+    /* the float left above pushes everything back to the left*/
+}
+fieldset.search input, fieldset.search select{
+    width: 25em; /* works with above to be the same size for the boxes */
+}
+input#btnSubmit{
+    position: relative;
+    vertical-align: top;
+    margin-left: 8em;
+    width: 40%;
+    height: 40px;
+    padding: 0;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(black, .25);
+    background: #f0776c;
+    border: 0;
+    border-bottom: 2px solid #d76b60;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: inset 0 -2px #d76b60;
+}
+
+label {
+    color: #005cb3;
+    display: block;
+    font-size: .9em;
+    font-weight: bold;
+}
+/* style the errors in the form so they are visible */
+.mistake {
+    color: #fff;
+    background-color:#800;
+    border: thin solid #000;
+}
+/* style the list of errors that will show before the form */
+#errors ol li{
+    color: #ff5555;
+}
+
+/********** Table Style **********/
+table{
+    border-collapse: collapse;
+    border: groove lightblue;
+}
+table, tr, td,th {
+    padding: .2em;
+}
+td:nth-child(4), td:nth-child(9){
+    text-align: center;
+}
+tr:nth-child(odd){
+    background:#ffffff;
+}
+tr:nth-child(even){
+    background: lightblue;
+} 
+tr:hover{
+    background: rgb(31, 84, 131);
+    color: whitesmoke;
+}
+tbody{
+    /*   display:block;
+       height: 10em;
+       overflow: auto;*/
+}
