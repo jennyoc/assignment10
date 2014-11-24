@@ -3,12 +3,12 @@
 require_once('../bin/myDatabase.php');
 $dbUserName = get_current_user() . '_reader';
 $whichPass = "r"; //flag for which one to use.
-$dbName = strtoupper(get_current_user()) . '_UVM_Shelter';
+$dbName = strtoupper(get_current_user()) . '_Final_Project';
 $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 
 
 
-include 'include/top.php';
+include ("include/top.php");
 // SECTION: 1 Initialize variables
 // 1s. variables for the classroom purposes to help find errors
 $debug = false;
@@ -23,7 +23,7 @@ if ($debug)
 
 // 1b. security: define security variable to be used in SECTION 2a.
 $yourURL = $domain . $phpSelf;
-$url = "dog-information.csv";
+$url = "https://jocallag.w3.uvm.edu/cs148/assignment10/include/dog.csv";
 /* ##### Step one
  *
  * create your database object using the appropriate database username
@@ -31,16 +31,14 @@ $url = "dog-information.csv";
 
 
 // SECTION: 1c form variables
-$animal = "";
 $breed = "";
+$size = "";
 $age = "";
+$hypo = "";
 $gender = "";
-$spadeNeutured = "";
-$hypoallergenic = "";
 $children = "";
-$pets = "";
 $data = array();
-$animalERROR = false;
+$breedERROR = false;
 
 // SECTION: 1e misc variables
 //
@@ -97,74 +95,64 @@ if (isset($_POST["btnSubmit"])) {
         }
 
 // SECTION: 2b Sanitize (clean) data
-        $animal = htmlentities($_POST["radAnimal"], ENT_QUOTES, "UTF-8");
-        
+
         $breed = htmlentities($_POST["lstBreed"], ENT_QUOTES, "UTF-8");
 
-        $age = htmlentities($_POST["lstAge"], ENT_QUOTES, "UTF-8");
-
-        $gender = htmlentities($_POST ["radGender"], ENT_QUOTES, "UTF-8");
-        
-        $spadeNeutured = htmlentities($_POST ["chkSpadeNeutured"], ENT_QUOTES, "UTF-8");
-        
-        $hypoallergenic = htmlentities($_POST ["chkHypoallergeinc"], ENT_QUOTES, "UTF-8");
-        
-        $children = htmlentities($_POST ["chkChildren"], ENT_QUOTES, "UTF-8");
-
+// re-do up
+        $children = htmlentities($_POST["lstChildren"], ENT_QUOTES, "UTF-8");
 
 // SECTION: 2c Validation
 
-        if ($animal = "") {
-                $errorMsg[] = "You must choose which animal you would like to search for";
-                $animalERROR = true;
-            }
-        }
-        
-// SECTION: 2e prepare query
 
-        $query = "SELECT CONCAT(fldDepartment, fldCourseNumber) AS Course, fldCRN AS CRN, CONCAT(fldFirstName, fldLastName) AS Professor, fldMaxStudents-fldNumStudents AS SeatsAvailable, fldSection AS Section, fldType AS Type, fldStart AS StartTime, fldStop AS StopTime, fldDays AS Days, fldBuilding AS Building, fldRoom AS Room";
-        $query .= " FROM tblSections ";
-        $query .= " INNER JOIN tblCourses ON pmkCourseId=fnkCourseId ";
-        $query .= " INNER JOIN tblTeachers ON pmkNetId=fnkTeacherNetId ";
-        $query .= " WHERE fldStart LIKE ? ";
-        $data[] = $startTime . "%";
+        /*
+          // SECTION: 2e prepare query
+          //$query = "SELECT * ";
+
+          $query = "SELECT fldDogName AS Name, fldBreed AS Breed, ";
+          $query .= " FROM tblDogs ";
+          $query .= " INNER JOIN tblShelters ON pmkShelterId=fnkShelterId ";
+          $query .= " WHERE fldStart LIKE ? ";
+          $data[] = $startTime . "%";
 
 
-//here do rest
-        if ($animal != "") {
-            $query .= " AND fldDepartment = ? ";
-            $data[] = $subject;
-        }
+          //here do rest
+          if ($subject != "") {
+          $query .= " AND fldDepartment = ? ";
+          $data[] = $subject;
+          }
 
-        if ($number != "") {
-            $query .= " AND fldCourseNumber = ? ";
-            $data[] = $number;
-        }
+          if ($number != "") {
+          $query .= " AND fldCourseNumber = ? ";
+          $data[] = $number;
+          }
 
-        if ($building != "") {
-            $query .= " AND fldBuilding = ? ";
-            $data[] = $building;
-        }
+          if ($building != "") {
+          $query .= " AND fldBuilding = ? ";
+          $data[] = $building;
+          }
 
-        if ($professor != "") {
-            $query .= " AND fldLastName LIKE ? ";
-            $data[] = $professor . "%";
-        }
+          if ($professor != "") {
+          $query .= " AND fldLastName LIKE ? ";
+          $data[] = $professor . "%";
+          }
 
-        if ($type != "") {
-            $query .= " AND fldType = ? ";
-            $data[] = $type;
-        }
+          if ($type != "") {
+          $query .= " AND fldType = ? ";
+          $data[] = $type;
+          }
 
 
-// execute query using a  prepared statement
-        $results = $thisDatabase->select($query, $data);
-        $numberRecords = count($results);
+          // execute query using a  prepared statement
+          $results = $thisDatabase->select($query, $data);
+          $numberRecords = count($results);
+         * 
+         */
     }
+}
 
 
 if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-    print "<h2>Total Sections Found: " . $numberRecords . "</h2>";
+    print "<h2>Dogs Available: " . $numberRecords . "</h2>";
     print "<table>";
 
     $firstTime = true;
@@ -208,81 +196,145 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
     <article id="main">
 
-        <form action="form.php"
+        <form action="search.php"
               method="post"
-              id="frmSearch">
+              id="frmRegister">
             <fieldset class="wrapper">
-                <h2>Start your pet search here:</h2>
+
+                <fieldset class="wrapperTwo">
+                    <legend>Search For Your New Companion Today!</legend>
                     <fieldset class="search">
-
-                        <label for="radAnimal">Subject
-                            <input type="radio" id="radAnimal" name="radAnimal"
-                                   value= "<?php print $animal; ?>"
-                                   tabindex="100" maxlength="45" placeholder="Enter course subject like: CS"
-    <?php if ($animalERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   autofocus>
-                        </label>
-
-                        <label for="txtNumber">Number
-                            <input type="text" id="txtNumber" name="txtNumber"
-                                   value="<?php print $number; ?>"
-                                   tabindex="200" maxlength="45" placeholder="Enter course number like: 148"
-    <?php if ($numberERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   autofocus>
-                        </label>
+                        <!--Breed list box-->
+                        <?php
+// Step Two: code can be in initialize variables or where step four needs to be
+                        $query = "SELECT DISTINCT fldBreed ";
+                        $query .= "FROM tblDogs ";
+                        $query .= "ORDER BY fldBreed";
 
 
-                        <label for="lstBuilding">Building
-                            <select id="lstBuilding"
-                                    name="lstBuilding"
+// Step Three: code can be in initialize variables or where step four needs to be
+// $buildings is an associative array
+                        $breed = $thisDatabase->select($query);
+
+// Step Four: prepare output two methods, only do one of them
+
+                        $output = array();
+                        $output[] = '<form>';
+                        $output[] = '<label for="lstBreed">Breed: ';
+                        $output[] = '<select id="lstBreed" ';
+                        $output[] = '        name="lstBreed"';
+                        $output[] = '        tabindex="300" >';
+
+
+                        foreach ($breed as $row) {
+
+                            $output[] = '<option ';
+                            if ($breed == $row["fldBreed"])
+                                $output[] = ' selected ';
+
+                            $output[] = 'value="' . $row["fldBreed"] . '">' . $row["fldBreed"];
+
+                            $output[] = '</option>';
+                        }
+
+                        $output[] = '</select></label>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
+
+                        <!--Size check boxes-->
+    <?php
+    // Step Two: code can be in initialize variables or where step four needs to be
+    $query = "SELECT   ";
+    $query .= "FROM tblDogs ";
+
+// Step Three: code can be in initialize variables or where step four needs to be
+// $buildings is an associative array
+    $size = $thisDatabase->select($query);
+
+// Step Four: prepare output two methods, only do one of them
+//  Here is how to code it 
+
+    $output = array();
+    $output[] = '<form>';
+    $output[] = '<fieldset class="checkbox">';
+    $output[] = '<legend>Size:</legend>';
+
+
+    foreach ($size as $row) {
+
+        $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldHobby"]) . '"><input type="checkbox" ';
+        $output[] = ' id="chk' . str_replace(" ", "-", $row["fldHobby"]) . '" ';
+        $output[] = ' name="chk' . str_replace(" ", "-", $row["fldHobby"]) . '" ';
+        $output[] = 'value="' . $row["pkHobbyId"] . '">' . $row["fldHobby"];
+        $output[] = '</label>';
+    }
+
+    $output[] = '</fieldset>';
+
+    print join("\n", $output);  // this prints each line as a separate  line in html
+    ?>
+
+                        <!--Gender radio buttons-->
+    <?php
+// Step Two: code can be in initialize variables or where step four needs to be
+    $query = "SELECT DISTINCT fldGender ";
+    $query .= "FROM tblDogs ";
+
+// Step Three: code can be in initialize variables or where step four needs to be
+// $buildings is an associative array
+    $gender = $thisDatabase->select($query);
+
+// Step Four: prepare output two methods, only do one of them
+//  Here is how to code it
+
+    $output = array();
+    $output[] = '<form>';
+    $output[] = '<fieldset class="radio">';
+    $output[] = '<legend>Gender:</legend>';
+
+    foreach ($gender as $row) {
+
+        $output[] = '<label for="rad' . str_replace(" ", "-", $row["fldGender"]) . '"><input type="radio" ';
+        $output[] = ' id="rad' . str_replace(" ", "-", $row["fldGender"]) . '" ';
+        $output[] = ' name="radGender" ';
+
+        if ($myFavorite == $row["pmkDogId"])
+            $output[] = " checked ";
+
+        $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldGender"];
+        $output[] = '</label>';
+    }
+
+
+    print join("\n", $output);  // this prints each line as a separate  line in html 
+    ?>
+
+                        <!-- Children -->
+                        <label for="lstChildren">Good with children:
+                            <select id="lstChildren"
+                                    name="lstChildren"
                                     tabindex="300" >
-                                <option  selected value="">Any</option><option value="31 SPR">31 SPR</option><option value="481 MN">481 MN</option><option value="70S WL">70S WL</option><option value="AIKEN">AIKEN</option><option value="ALLEN">ALLEN</option><option value="ANGELL">ANGELL</option><option value="BLLNGS">BLLNGS</option><option value="COOK">COOK</option><option value="DELEHA">DELEHA</option><option value="DEWEY">DEWEY</option><option value="FAHC">FAHC</option><option value="FLEMIN">FLEMIN</option><option value="GIVN">GIVN</option><option value="GIVN B">GIVN B</option><option value="GIVN C">GIVN C</option><option value="GIVN E">GIVN E</option><option value="GUTRSN">GUTRSN</option><option value="HARRIS">HARRIS</option><option value="HILLS">HILLS</option><option value="HSRF">HSRF</option><option value="JEFFRD">JEFFRD</option><option value="JERCHO">JERCHO</option><option value="KALKIN">KALKIN</option><option value="L/L CM">L/L CM</option><option value="L/L-A">L/L-A</option><option value="L/L-B">L/L-B</option><option value="L/L-D">L/L-D</option><option value="LAFAYE">LAFAYE</option><option value="MANN">MANN</option><option value="MEDED">MEDED</option><option value="ML SCI">ML SCI</option><option value="MORRIL">MORRIL</option><option value="MRC">MRC</option><option value="MRC-CO">MRC-CO</option><option value="MUSIC">MUSIC</option><option value="OFFCMP">OFFCMP</option><option value="OLDMIL">OLDMIL</option><option value="OMANEX">OMANEX</option><option value="ONCMP">ONCMP</option><option value="ONLINE">ONLINE</option><option value="PATGYM">PATGYM</option><option value="PERKIN">PERKIN</option><option value="POMERO">POMERO</option><option value="ROWELL">ROWELL</option><option value="RT THR">RT THR</option><option value="SOUTHW">SOUTHW</option><option value="STAFFO">STAFFO</option><option value="TERRIL">TERRIL</option><option value="TRAVEL">TRAVEL</option><option value="UHTN">UHTN</option><option value="UHTN23">UHTN23</option><option value="UHTS">UHTS</option><option value="UHTS23">UHTS23</option><option value="VOTEY">VOTEY</option><option value="WATERM">WATERM</option><option value="WHEELR">WHEELR</option><option value="WILLMS">WILLMS</option>
+                                <option selected value=""> </option><option value="Yes">Yes</option>
+                                <option value="No">No</option>
                             </select></label>
-
-
-                        <label for="txtStartTime">Start Time
-                            <input type="text" id="txtStartTime" name="txtStartTime"
-                                   value="<?php print $startTime; ?>"
-                                   tabindex="400" maxlength="45" placeholder="Enter the start time of the class like: 13:00"
-    <?php if ($startTimeERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   autofocus>
-                        </label>
-
-                        <label for="txtProfessor">Professor
-                            <input type="text" id="txtProfessor" name="txtProfessor"
-                                   value="<?php print $professor; ?>"
-                                   tabindex="500" maxlength="45" placeholder="Enter the Professor's Last name like: Erickson"
-    <?php if ($professorERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   autofocus>
-                        </label>
-
-                        <label for="lstType">Type of Class
-                            <select id="lstType"
-                                    name="lstType"
-                                    tabindex="600" >
-                                <option selected value="">Any</option>
-                                <option value="ACT">ACT</option><option value="CLN">CLN</option><option value="DIS">DIS</option><option value="FWRK">FWRK</option><option value="H">H</option><option value="HYBD">HYBD</option><option value="INTN">INTN</option><option value="IS">IS</option><option value="LAB">LAB</option><option value="LCDS">LCDS</option><option value="LCLB">LCLB</option><option value="LEC">LEC</option><option value="ONL">ONL</option><option value="PERF">PERF</option><option value="PRAC">PRAC</option><option value="REC">REC</option><option value="RSCH">RSCH</option><option value="SEM">SEM</option><option value="STD">STD</option><option value="TD">TD</option>
-                            </select></label>
-
-                        <!-- Z sections -->
                     </fieldset>
                     <fieldset class="buttons">
                         <legend></legend>
-                        <input type="submit" id="btnSubmit" name="btnSubmit" value="Find a class" tabindex="900" class="button">
+                        <input type="submit" id="btnSubmit" name="btnSubmit" value="Find a dog" tabindex="900" class="button">
 
                     </fieldset> <!-- ends buttons -->
-            </fieldset> <!-- ends wrapper  -->
 
+                </fieldset> <!-- ends wrapper Two -->
+
+            </fieldset> <!-- Ends Wrapper -->
         </form>
 
     </article>
     <?php
 }
-    include 'include/footer.php';
+// end body submit
+include ("include/footer.php");
 ?>
 </body>
 </html>

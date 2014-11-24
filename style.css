@@ -1,10 +1,17 @@
-/******CSS Designed By Jennifer Magie******
+/******CSS Designed By Jennifer Magie and Jenny O'Callaghan******/
+
+@import url('http://fonts.googleapis.com/css?family=Oxygen:300');
+@import url('http://fonts.googleapis.com/css?family=Raleway');
+
+*{
+    font-family: 'Raleway', sans-serif;
+}
 
 /********** - Main Page Layout - **********/
 body{
     margin: 36px auto;
     width: 90%;
-    background-color: aliceblue;
+    background-color: white;
 }
 
 h1{
@@ -21,45 +28,35 @@ h1{
     float: left;
     width: 62.8888889%; /* 566px / 900px */
 }
-//********** - Header Section - **********//
+/********** - Header Section - **********/
 
 
-h2{
-    color: darkcyan;
-    font-family: "Raleway", Helvetica, Arial, sans-serif;
+img{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
-//********** - Navigation Section - **********//
-nav ol {
-    padding-left: 5.33333333%; /* 48px / 900px */
-    font-family: sans-serif
+/********** - Navigation Section - **********/
+nav{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
-nav ol li{
-    display: inline-block;
-    list-style-type: none;
-    padding-right: 3em;
-}
-
-nav a{
-    position: relative;
-    vertical-align: top;
-    margin-left: 2em;
-    width: 40%;
-    height: 40px;
-    padding: 0.5em;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(black, .25);
-    background: #f0776c;
-    border: 0;
-    border-bottom: 2px solid #d76b60;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: inset 0 -2px #d76b60;
+ol{
+    list-style: none;
+    display: inline-flex;
 
 }
 
+li{
+    display: inline;
+    padding-left: 30px;
+}
+
+a{
+    text-decoration: none;
+}
 /********** - - **********/
 article h1, article p, article table{
     padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
@@ -105,8 +102,8 @@ aligns them. Display block means they are each on their own line. */
 fieldset.search label{
     display: block;
     text-align: right;
-    font-family: 'Goudy Bookletter 1911', Georgia, Times, serif;
-    font-size: 16px;
+font-family: 'Raleway', sans-serif;
+font-size: 16px;
     line-height: 25px;
     color: darkcyan;
     /* pushes the text to the right where they line up */

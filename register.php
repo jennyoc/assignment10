@@ -112,7 +112,7 @@ if (isset($_POST["btnSubmit"])) {
 // see section 3b. The error flag ($emailERROR) will be used in section 3c.
     $dbUserName = get_current_user() . '_admin';
     $whichPass = "a"; //flag for which one to use.
-    $dbName = strtoupper(get_current_user()) . '_UVM_Shelter';
+    $dbName = strtoupper(get_current_user()) . '_Final_Project';
     $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 
     if ($firstName == "") {
