@@ -106,13 +106,11 @@ if (isset($_POST["btnSubmit"])) {
 
 // SECTION: 2c Validation
         // SECTION: 2e prepare query
-        //$query = "SELECT * ";
 
         $query = "SELECT fldDogName AS Name, fldBreed AS Breed, fldSize AS Size, fldAge AS Age, fldCoat AS Coat, fldHypo AS Hypoallergenic, fldColor AS Coloring, fldGender AS Gender, fldChildren AS Children  ";
         $query .= " FROM tblDogs ";
         $query .= " INNER JOIN tblShelters ON pmkShelterId=fnkShelterId ";
 
-        //here do rest
         if ($breed != "") {
             $query .= " AND fldBreed = ? ";
             $data[] = $breed;
@@ -123,12 +121,10 @@ if (isset($_POST["btnSubmit"])) {
             $data[] = $size;
         }
 
-        /* if ($age != "") {
-          $query .= " AND fldAge = ? ";
+        if ($age != "") {
+          $query .= " AND fldStage = ? ";
           $data[] = $age;
           }
-         * 
-         */
 
         if ($coat != "") {
             $query .= " AND fldCoat = ? ";
@@ -398,6 +394,24 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
         </form>
 
     </article>
+<article class="aside">
+    <h4>Age (Years)</h4>
+    <h5>
+        Puppy: 0-2<br><br>
+        Adult: 3-5<br><br>
+        Senior: 6-9<br><br>
+        Geriatric: 10+ 
+    </h5>
+    <h4>Size (Pounds)</h4>
+    <h5>
+        Small: Under 25<br><br>
+        Medium: 26-40<br><br>
+        Large: 41-70<br><br>
+        XL: 70+
+    </h5>
+
+    
+</article>
     <?php
 }
 // end body submit
