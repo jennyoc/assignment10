@@ -1,19 +1,14 @@
 <?php
-include 'include/top.php';
+
+
+include "include/top.php";
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
-//
+$update = false;
+
 // SECTION: 1a.
-// variables for the classroom purposes to help find errors.
-$debug = false;
-if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
-    $debug = true;
-}
-if ($debug)
-    print "<p>DEBUG MODE IS ON</p>";
-
-
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1b Security
@@ -27,34 +22,54 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-$firstName = "";
-$lastName = "";
-$email = "";
-$password = "";
-$password2 = "";
+
+// SECTION: 1 Initialize variables
+$update = false;
+//%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
+//
+// SECTION: 1c form variables
+//
+// Initialize variables one for each form element
+// in the order they appear on the form
+
+if (isset($_GET["id"])) {
+    $pmkUserId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
+
+    $query = 'SELECT fldFirstName, fldLastName, fldEmail, fldPassword ';
+    $query .= 'FROM tblUser WHERE pmkUserId = ?';
+
+    $results = $thisDatabase->select($query, array($pmkUserId));
+
+    $firstName = $results[0]["fldFirstName"];
+    $lastName = $results[0]["fldLastName"];
+    $email = $results[0]["fldEmail"];
+    $password = $results[0]["fldPassword"];
+} else {
+    $pmkUserId = -1;
+    $firstName = "";
+    $lastName = "";
+    $email = "";
+    $password = "";
+}
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1d form error flags
+//
+// Initialize Error Flags one for each form element we validate
+// in the order they appear in section 1c.
 $firstNameERROR = false;
 $lastNameERROR = false;
 $emailERROR = false;
 $passwordERROR = false;
-$password2ERROR = false;
-
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
 $errorMsg = array();
-
-// used for building email message to be sent and displayed
-$mailed = false;
-$messageA = "";
-$messageB = "";
-$messageC = "";
-$messageD="";
+$data = array();
+$dataEntered = false;
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -65,58 +80,58 @@ if (isset($_POST["btnSubmit"])) {
 //
 // SECTION: 2a Security
 //
-    if (!securityCheck(true)) {
-        $msg = "<p>Sorry you cannot access this page. ";
-        $msg.= "Security breach detected and reported</p>";
-        die($msg);
-    }
-
+    /*    if (!securityCheck(true)) {
+      $msg = "<p>Sorry you cannot access this page. ";
+      $msg.= "Security breach detected and reported</p>";
+      die($msg);
+      }
+     */
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2b Sanitize (clean) data
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
-    $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $firstName;
-    
-    $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $lastName;
+    $pmkPoetId = htmlentities($_POST["hidPoetId"], ENT_QUOTES, "UTF-8");
+    if ($pmkPoetId > 0) {
+        $update = true;
+    }
+    // I am not putting the ID in the $data array at this time
 
-    $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
-    $dataRecord[] = $email;
+    $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
+    $data[] = $firstName;
+
+    $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
+    $data[] = $lastName;
+
+    $email = htmlentities($_POST["txtEmail"], ENT_QUOTES, "UTF-8");
+    $data[] = $email;
     
     $password = htmlentities($_POST["txtPassword"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $password;
-    
-    $password2 = htmlentities($_POST["txtPassword2"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $password2;
-    
-    
+    $data[] = $password;
 
-    
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2c Validation
-    
-    // Validation section.
+//
     $dbUserName = get_current_user() . '_admin';
     $whichPass = "a"; //flag for which one to use.
     $dbName = strtoupper(get_current_user()) . '_Shelter';
     $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
-    
+
     if ($firstName == "") {
         $errorMsg[] = "Please enter your first name";
         $firstNameERROR = true;
     } elseif (!verifyAlphaNum($firstName)) {
-        $errorMsg[] = "Your first name appears to contain incorrect characters.";
+        $errorMsg[] = "Your first name appears to have extra character.";
         $firstNameERROR = true;
     }
+
     if ($lastName == "") {
         $errorMsg[] = "Please enter your last name";
         $lastNameERROR = true;
     } elseif (!verifyAlphaNum($lastName)) {
-        $errorMsg[] = "Your last name appears to contain incorrect characters.";
+        $errorMsg[] = "Your last name appears to have extra character.";
         $lastNameERROR = true;
     }
     
@@ -131,6 +146,7 @@ if (isset($_POST["btnSubmit"])) {
     $emailERROR = true;
     $errorMsg[] = "There is already a user with that email";
     }
+    
     if ($password == "") {
         $errorMsg[] = "Please enter a password";
         $passwordERROR = true;
@@ -138,63 +154,67 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = "Your password appears to contain incorrect characters";
         $passwordERROR = true;
     }
-    if ($password != $password2){
-        $errorMsg[] = "Your passwords do not match.";
-        $password2Error = true;        
-    }
-
-
-    
-    
-
+    //// should check to make sure its the correct date format
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//
 // SECTION: 2d Process Form - Passed Validation
 //
 // Process for when the form passes validation (the errorMsg array is empty)
 //
     if (!$errorMsg) {
-        if ($debug)
+        if ($debug) {
             print "<p>Form is valid</p>";
+        }
 
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//
+// SECTION: 2e Save Data
+//
 
-        // SECTION: 2e Save Data
-
-        // create a key value for confirmation
-            // SECTION: 2e Save Data
-        //
-
-        $primaryKey = "";
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = 'INSERT INTO tblUser(fldfirstName, fldLastName, fldEmail, fldPassword) VALUES (?,?,?,?)';
-            $data = array($firstName,$lastName, $email, md5($password)); //md5($password) creates an encryption of the                     password to be displayed in the database - this is done for security reasons.
-            if ($debug) {
-                print "<p>sql " . $query;
-                print"<p><pre>";
-                print_r($data);
-                print"</pre></p>";
+
+            if ($update) {
+                $query = 'UPDATE tblUser SET ';
+            } else {
+                $query = 'INSERT INTO tblUser SET ';
             }
-            $results = $thisDatabase->insert($query, $data);
 
-            $primaryKey = $thisDatabase->lastInsert();
-            if ($debug)
-                print "<p>pmk= " . $primaryKey;
+            $query .= 'fldFirstName = ?, ';
+            $query .= 'fldLastName = ?, ';
+            $query .= 'fldEmail = ? ';
+            $query .= 'fldPassword = ? ';
 
-// all sql statements are done so lets commit to our changes
-            $dataEntered = $thisDatabase->db->commit();
-            $dataEntered = true;
+            if ($update) {
+                $query .= 'WHERE pmkUserId = ?';
+                $data[] = $pmkUserId;
+                
+                $results = $thisDatabase->update($query, $data);
+            } else {
+                $results = $thisDatabase->insert($query, $data);
+
+                $primaryKey = $thisDatabase->lastInsert();
+                if ($debug) {
+                    print "<p>pmk= " . $primaryKey;
+                }
+            }
+        
+
+            // all sql statements are done so lets commit to our changes
+            
+        $dataEntered = $thisDatabase->db->commit();
+
             if ($debug)
                 print "<p>transaction complete ";
-        } catch (PDOException $e) {
+        } catch (PDOExecption $e) {
             $thisDatabase->db->rollback();
             if ($debug)
                 print "Error!: " . $e->getMessage() . "</br>";
-            $errorMsg[] = "There was a problem with accepting your data please contact us directly.";
+            $errorMsg[] = "There was a problem with accpeting your data please contact us directly.";
         }
-        
-        
-        // If the transaction was successful, give success message
+
+    // If the transaction was successful, give success message
         if ($dataEntered) {
             if ($debug)
                 print "<p>data entered now prepare keys ";
@@ -240,7 +260,7 @@ if (isset($_POST["btnSubmit"])) {
             $subject = "PUPPY LOVERMONT: CONFIRM REGISTRATION";
 
             $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
-        } //data entered
+        }
     } // end form is valid
 } // ends if form was submitted.
 //#############################################################################
@@ -248,12 +268,11 @@ if (isset($_POST["btnSubmit"])) {
 // SECTION 3 Display Form
 //
 ?>
-<!-- ######################     Header Section   ############################## -->
-<?php
-include "header.php";
-?>
-
-<!-- ######################     Article Section   ############################## -->
+<nav>
+    <ol>
+        <li><a href="userList.php">Users</a></li><li class="activePage">Add Poet</li>    </ol>
+</nav><article id="main">
+      
 <article id="main">
     <?php
 //####################################
@@ -265,20 +284,8 @@ include "header.php";
 //
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
-    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h3>Your Request has ";
-        if (!$mailed) {
-            print "not ";
-        }
-        print "been processed</h3>";
-        print "<p>A copy of this message has ";
-        if (!$mailed) {
-            print "not ";
-        }
-        print "been sent</p>";
-        print "<p>To: " . $email . "</p>";
-        print "<p>Mail Message:</p>";
-        print $messageA . $messageC . $messageD;
+    if ($dataEntered) { // closing of if marked with: end body submit
+        print "<h1>Record Saved</h1> ";
     } else {
 //####################################
 //
@@ -297,68 +304,59 @@ include "header.php";
 //####################################
 //
 // SECTION 3c html Form
+//
+        /* Display the HTML form. note that the action is to this same page. $phpSelf
+          is defined in top.php
+          NOTE the line:
+          value="<?php print $email; ?>
+          this makes the form sticky by displaying either the initial default value (line 35)
+          or the value they typed in (line 84)
+          NOTE this line:
+          <?php if($emailERROR) print 'class="mistake"'; ?>
+          this prints out a css class so that we can highlight the background etc. to
+          make it stand out that a mistake happened here.
+         */
         ?>
         <form action="<?php print $phpSelf; ?>"
               method="post"
               id="frmRegister">
             <fieldset class="wrapper">
-                <legend>Become a member today!</legend>
-                <fieldset class="wrapperTwo">
-                    <legend>Please complete the following form with your contact information</legend>
-                    <fieldset class="contact">
-
-                        </label>
-
-
-                        <label for="txtFirstName" class="required">First Name
-                            <input type="text" id="txtFirstName" name="txtFirstName"
-                                   value="<?php print $firstName; ?>"
-                                   tabindex="120" maxlength="45" placeholder="Enter your first name"
-                                   <?php if ($firstNameERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   >
-                        </label>
-                        
-                        </label>
-
-
-                        <label for="txtLastName" class="required">Last Name
-                            <input type="text" id="txtLastName" name="txtLastName"
-                                   value="<?php print $lastName; ?>"
-                                   tabindex="120" maxlength="45" placeholder="Enter your last name"
-                                   <?php if ($lastNameERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   >
-                        </label>
-
-
-                        
-                        <label for="txtEmail" class="required">Email
-                            <input type="text" id="txtEmail" name="txtEmail"
-                                   value="<?php print $email; ?>"
-                                   tabindex="120" maxlength="45" placeholder="Enter a valid email address"
-                                   <?php if ($emailERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   >
-                        </label>
-                         <label for="txtPassword" class="required">Password
-                            <input type="password" id="txtPassword" name="txtPassword"
-                                   value=""
-                                   tabindex="120" maxlength="45" placeholder="Create a password"
-                                   <?php if ($passwordERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   >
-                        </label>
-                        <label for="txtPassword2" class="required">Confirm Password
-                            <input type="password" id="txtPassword2" name="txtPassword2"
-                                   value=""
-                                   tabindex="120" maxlength="45" placeholder="Create a password"
-                                   <?php if ($password2ERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   >
-                        </label>
-                            
-                        
+                <legend>Add a user</legend>
+<label for="txtFirstName" class="required">First Name
+<input type="text" id="txtFirstName" name="txtFirstName"
+value="<?php print $firstName; ?>"
+tabindex="100" maxlength="45" placeholder="Enter the first name"
+<?php if ($firstNameERROR) print 'class="mistake"'; ?>
+onfocus="this.select()"
+autofocus>
+</label>
+                
+                <label for="txtLastName" class="required">Last Name
+<input type="text" id="txtLastName" name="txtLastName"
+value="<?php print $lastName; ?>"
+tabindex="100" maxlength="45" placeholder="Enter the last name"
+<?php if ($lastNameERROR) print 'class="mistake"'; ?>
+onfocus="this.select()"
+>
+</label>
+                
+  <label for="txtEmail" class="required">Email
+<input type="text" id="txtEmail" name="txtEmail"
+value="<?php print $email; ?>"
+tabindex="100" maxlength="45" placeholder="Enter the email"
+<?php if ($emailERROR) print 'class="mistake"'; ?>
+onfocus="this.select()"
+>
+</label>   
+                
+    <label for="txtPassword" class="required">Password
+<input type="password" id="txtPassword" name="txtPassword"
+value="<?php print $password; ?>"
+tabindex="100" maxlength="45" placeholder="Enter the password"
+<?php if ($passwordERROR) print 'class="mistake"'; ?>
+onfocus="this.select()"
+>
+</label>             
                     </fieldset> <!-- ends contact -->
                 </fieldset> <!-- ends wrapper Two -->
                 <fieldset class="buttons">
@@ -371,8 +369,6 @@ include "header.php";
     } // end body submit
     ?>
 </article>
-
-
 
 <?php
 include "include/footer.php";

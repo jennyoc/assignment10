@@ -11,8 +11,8 @@
 
         <link rel="stylesheet" href="style.css" type="text/css" media="screen">
         
-        <link rel="shortcut icon" href="image/paw.ico">
-        <link rel="icon" type="image/ico" href="image/paw.ico">
+        <link rel="shortcut icon" href="images/paw.ico">
+        <link rel="icon" type="image/ico" href="images/paw.ico">
 
         <?php
         $debug = false;
@@ -53,8 +53,56 @@
 
         require_once('lib/security.php');
 
+        if ($path_parts['filename'] == "index") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "about-us") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "adopt") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "register") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        
+        if ($path_parts['filename'] == "form") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
         if ($path_parts['filename'] == "search") {
             include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "userForm") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "userList") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "confirmation") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "locations") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
         }
         ?>	
 

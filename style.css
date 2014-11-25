@@ -36,6 +36,19 @@ img{
     margin-right: auto;
     display: block;
 }
+/*********** - Aside on index.php - **********/
+.slider{ 
+        width:673px;
+	min-height:400px;
+	float:left;	
+	margin:0px;
+	text-align:center;
+	padding:50px 0px;
+        display: inline;
+	list-style-type: none;
+	padding-right: 3em;
+        
+}
 
 /********** - Navigation Section - **********/
 nav{
@@ -52,6 +65,7 @@ ol{
 li{
     display: inline;
     padding-left: 30px;
+    text-transform: uppercase;
 }
 
 a{

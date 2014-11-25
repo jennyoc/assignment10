@@ -1,14 +1,15 @@
 <?php
+include 'include/top.php';
 //print_r($_POST);
 require_once('../bin/myDatabase.php');
 $dbUserName = get_current_user() . '_reader';
 $whichPass = "r"; //flag for which one to use.
-$dbName = strtoupper(get_current_user()) . '_Final_Project';
+$dbName = strtoupper(get_current_user()) . '_Shelter';
 $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 
 
 
-include ("include/top.php");
+
 // SECTION: 1 Initialize variables
 // 1s. variables for the classroom purposes to help find errors
 $debug = false;
@@ -23,7 +24,6 @@ if ($debug)
 
 // 1b. security: define security variable to be used in SECTION 2a.
 $yourURL = $domain . $phpSelf;
-$url = "https://jocallag.w3.uvm.edu/cs148/assignment10/include/dog.csv";
 /* ##### Step one
  *
  * create your database object using the appropriate database username
@@ -31,14 +31,23 @@ $url = "https://jocallag.w3.uvm.edu/cs148/assignment10/include/dog.csv";
 
 
 // SECTION: 1c form variables
+$name = "";
 $breed = "";
 $size = "";
 $age = "";
-$hypo = "";
 $gender = "";
+$coat = "";
 $children = "";
-$data = array();
+
+$data= array();
+
+$nameERROR = false;
 $breedERROR = false;
+$sizeERROR = false;
+$ageERROR = false;
+$genderERROR = false;
+$coatERROR = false;
+$childrenERROR = false;
 
 // SECTION: 1e misc variables
 //
@@ -95,64 +104,84 @@ if (isset($_POST["btnSubmit"])) {
         }
 
 // SECTION: 2b Sanitize (clean) data
-
+        $name = htmlentities($_POST["txtName"], ENT_QUOTES, "UTF-8");
+        $dataRecord[] = $name;
+        
         $breed = htmlentities($_POST["lstBreed"], ENT_QUOTES, "UTF-8");
+        
+        $size = htmlentities($_POST["lstSize"], ENT_QUOTES, "UTF-8");
 
-// re-do up
-        $children = htmlentities($_POST["lstChildren"], ENT_QUOTES, "UTF-8");
+        $age = htmlentities($_POST["lstAge"], ENT_QUOTES, "UTF-8");
+
+        $gender = htmlentities($_POST ["radGender"], ENT_QUOTES, "UTF-8");
+        
+        $coat = htmlentities($_POST ["lstCoat"], ENT_QUOTES, "UTF-8");
+        
+        $children = htmlentities($_POST ["chkChildren"], ENT_QUOTES, "UTF-8");
+
 
 // SECTION: 2c Validation
 
+        if ($name != "") {
+            if (!verifyLetters($name)) {
+                $errorMsg[] = "You must type letters like: Bailey";
+                $nameERROR = true;
+            }
+        }
+        
+// SECTION: 2e prepare query
 
-        /*
-          // SECTION: 2e prepare query
-          //$query = "SELECT * ";
-
-          $query = "SELECT fldDogName AS Name, fldBreed AS Breed, ";
-          $query .= " FROM tblDogs ";
-          $query .= " INNER JOIN tblShelters ON pmkShelterId=fnkShelterId ";
-          $query .= " WHERE fldStart LIKE ? ";
-          $data[] = $startTime . "%";
-
-
-          //here do rest
-          if ($subject != "") {
-          $query .= " AND fldDepartment = ? ";
-          $data[] = $subject;
-          }
-
-          if ($number != "") {
-          $query .= " AND fldCourseNumber = ? ";
-          $data[] = $number;
-          }
-
-          if ($building != "") {
-          $query .= " AND fldBuilding = ? ";
-          $data[] = $building;
-          }
-
-          if ($professor != "") {
-          $query .= " AND fldLastName LIKE ? ";
-          $data[] = $professor . "%";
-          }
-
-          if ($type != "") {
-          $query .= " AND fldType = ? ";
-          $data[] = $type;
-          }
+        $query = "SELECT pmkDogId, fnkShelterId, fldDogName, fldBreed, fldSize, fldAge, fldGender, fldCoat, fldChildren";
+        $query .= " FROM tblDogs ";
+        $query .= " INNER JOIN tblShelters ON pnkShelterId=fnkShelterId ";
+        $query .= " WHERE fldDogName LIKE ? ";
+        $data[] = "%" . $name . "%";
 
 
-          // execute query using a  prepared statement
-          $results = $thisDatabase->select($query, $data);
-          $numberRecords = count($results);
-         * 
-         */
+//here do rest
+        if ($name != "") {
+            $query .= " AND fldDogName = ? ";
+            $data[] = "%" . $name . "%";
+        }
+
+        if ($breed != "") {
+            $query .= " AND fldBreed = ? ";
+            $data[] = $breed;
+        }
+
+        if ($size != "") {
+            $query .= " AND fldSize LIKE ? ";
+            $data[] = $size;
+        }
+
+        if ($age != "") {
+            $query .= " AND fldAge = ? ";
+            $data[] = $age;
+        }
+        
+        if ($gender != "") {
+            $query .= " AND fldGender = ? ";
+            $data[] = $gender;
+        }
+        
+        if ($coat != "") {
+            $query .= " AND fldCoat = ? ";
+            $data[] = $coat;
+        }
+        
+        if ($children != "") {
+            $query .= " AND fldChildren = ? ";
+            $data[] = $children;
+        }
+// execute query using a  prepared statement
+        $results = $thisDatabase->select($query, $data);
+        $numberRecords = count($results);
     }
 }
 
 
 if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-    print "<h2>Dogs Available: " . $numberRecords . "</h2>";
+    print "<h2>Total Sections Found: " . $numberRecords . "</h2>";
     print "<table>";
 
     $firstTime = true;
@@ -196,145 +225,80 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
     <article id="main">
 
-        <form action="search.php"
+        <form action="form.php"
               method="post"
-              id="frmRegister">
+              id="frmSearch">
             <fieldset class="wrapper">
-
-                <fieldset class="wrapperTwo">
-                    <legend>Search For Your New Companion Today!</legend>
+                <h2>Start your pet search here:</h2>
                     <fieldset class="search">
-                        <!--Breed list box-->
-                        <?php
-// Step Two: code can be in initialize variables or where step four needs to be
-                        $query = "SELECT DISTINCT fldBreed ";
-                        $query .= "FROM tblDogs ";
-                        $query .= "ORDER BY fldBreed";
 
+                        <label for="txtName">Subject
+                            <input type="text" id="txtName" name="txtName"
+                                   value= "<?php print $name; ?>"
+                                   tabindex="100" maxlength="45" placeholder="Enter dog name like: Bailey"
+    <?php if ($nameERROR) print 'class="mistake"'; ?>
+                                   onfocus="this.select()"
+                                   autofocus>
+                        </label>
 
-// Step Three: code can be in initialize variables or where step four needs to be
-// $buildings is an associative array
-                        $breed = $thisDatabase->select($query);
-
-// Step Four: prepare output two methods, only do one of them
-
-                        $output = array();
-                        $output[] = '<form>';
-                        $output[] = '<label for="lstBreed">Breed: ';
-                        $output[] = '<select id="lstBreed" ';
-                        $output[] = '        name="lstBreed"';
-                        $output[] = '        tabindex="300" >';
-
-
-                        foreach ($breed as $row) {
-
-                            $output[] = '<option ';
-                            if ($breed == $row["fldBreed"])
-                                $output[] = ' selected ';
-
-                            $output[] = 'value="' . $row["fldBreed"] . '">' . $row["fldBreed"];
-
-                            $output[] = '</option>';
-                        }
-
-                        $output[] = '</select></label>';
-
-                        print join("\n", $output);  // this prints each line as a separate  line in html
-                        ?>
-
-                        <!--Size check boxes-->
-    <?php
-    // Step Two: code can be in initialize variables or where step four needs to be
-    $query = "SELECT   ";
-    $query .= "FROM tblDogs ";
-
-// Step Three: code can be in initialize variables or where step four needs to be
-// $buildings is an associative array
-    $size = $thisDatabase->select($query);
-
-// Step Four: prepare output two methods, only do one of them
-//  Here is how to code it 
-
-    $output = array();
-    $output[] = '<form>';
-    $output[] = '<fieldset class="checkbox">';
-    $output[] = '<legend>Size:</legend>';
-
-
-    foreach ($size as $row) {
-
-        $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldHobby"]) . '"><input type="checkbox" ';
-        $output[] = ' id="chk' . str_replace(" ", "-", $row["fldHobby"]) . '" ';
-        $output[] = ' name="chk' . str_replace(" ", "-", $row["fldHobby"]) . '" ';
-        $output[] = 'value="' . $row["pkHobbyId"] . '">' . $row["fldHobby"];
-        $output[] = '</label>';
-    }
-
-    $output[] = '</fieldset>';
-
-    print join("\n", $output);  // this prints each line as a separate  line in html
-    ?>
-
-                        <!--Gender radio buttons-->
-    <?php
-// Step Two: code can be in initialize variables or where step four needs to be
-    $query = "SELECT DISTINCT fldGender ";
-    $query .= "FROM tblDogs ";
-
-// Step Three: code can be in initialize variables or where step four needs to be
-// $buildings is an associative array
-    $gender = $thisDatabase->select($query);
-
-// Step Four: prepare output two methods, only do one of them
-//  Here is how to code it
-
-    $output = array();
-    $output[] = '<form>';
-    $output[] = '<fieldset class="radio">';
-    $output[] = '<legend>Gender:</legend>';
-
-    foreach ($gender as $row) {
-
-        $output[] = '<label for="rad' . str_replace(" ", "-", $row["fldGender"]) . '"><input type="radio" ';
-        $output[] = ' id="rad' . str_replace(" ", "-", $row["fldGender"]) . '" ';
-        $output[] = ' name="radGender" ';
-
-        if ($myFavorite == $row["pmkDogId"])
-            $output[] = " checked ";
-
-        $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldGender"];
-        $output[] = '</label>';
-    }
-
-
-    print join("\n", $output);  // this prints each line as a separate  line in html 
-    ?>
-
-                        <!-- Children -->
-                        <label for="lstChildren">Good with children:
-                            <select id="lstChildren"
-                                    name="lstChildren"
+                        <label for="lstBreed">Breed
+                            <select id="lstBreed"
+                                    name="lstBreed"
                                     tabindex="300" >
-                                <option selected value=""> </option><option value="Yes">Yes</option>
-                                <option value="No">No</option>
+                                <option  selected value=""></option><option value="Bernese Mountain Dog">Bernese Mountain Dog</option><option value="English Bulldog">English Bulldog</option>
                             </select></label>
+
+                        <label for="lstSize">Size
+                                    <select id="lstSize"
+                                            name="lstSize"
+                                            tabindex="300" >
+                                        <option  selected value=""></option><option value="Small">Small</option><option value="Medium">Medium</option><option value="Large">Large</option>
+                                    </select></label>
+                        
+                        <label for="lstAge">Age
+                                    <select id="lstAge"
+                                            name="lstAge"
+                                            tabindex="300" >
+                                        <option  selected value=""></option><option value="Young">Young</option><option value="Adult">Adult</option><option value="Senior">Senior</option>
+                                    </select></label>
+
+
+                        <label for="radGender">
+ 
+
+
+                                    <input type="radio" name="gender" value="male" checked>Male
+
+                                    <input type="radio" name="gender" value="female">Female
+                                </label>
+
+                        <label for="lstCoat">Coat
+                                    <select id="lstCoat"
+                                            name="lstCoat"
+                                            tabindex="600" >
+                                        <option selected value="">Any</option>
+                                        <option value="Short">Short</option><option value="Medium">Medium</option><option value="Long">Long</option>
+                                    </select></label>
+                        
+                        <label for="chkChildren">Children
+Good with children: <input type="checkbox" name="children" value="yes"/>
+
+
+                        <!-- Z sections -->
                     </fieldset>
                     <fieldset class="buttons">
                         <legend></legend>
                         <input type="submit" id="btnSubmit" name="btnSubmit" value="Find a dog" tabindex="900" class="button">
 
                     </fieldset> <!-- ends buttons -->
+            </fieldset> <!-- ends wrapper  -->
 
-                </fieldset> <!-- ends wrapper Two -->
-
-            </fieldset> <!-- Ends Wrapper -->
         </form>
 
     </article>
+    </body>
     <?php
 }
-// end body submit
-include ("include/footer.php");
+    include 'include/footer.php';
 ?>
-</body>
 </html>
