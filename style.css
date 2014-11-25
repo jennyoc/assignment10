@@ -36,6 +36,19 @@ img{
     margin-right: auto;
     display: block;
 }
+/*********** - Aside on index.php - **********/
+.slider{ 
+        width:673px;
+	min-height:400px;
+	float:left;	
+	margin:0px;
+	text-align:center;
+	padding:50px 0px;
+        display: inline;
+	list-style-type: none;
+	padding-right: 3em;
+        
+}
 
 /********** - Navigation Section - **********/
 nav{
@@ -52,6 +65,7 @@ ol{
 li{
     display: inline;
     padding-left: 30px;
+    text-transform: uppercase;
 }
 
 a{
@@ -115,7 +129,26 @@ fieldset.search input, fieldset.search select{
 input#btnSubmit{
     position: relative;
     vertical-align: top;
-    margin-left: 8em;
+/*    margin-left: 8em; */
+    width: 40%;
+    height: 40px;
+    padding: 0;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(black, .25);
+    background: #f0776c;
+    border: 0;
+    border-bottom: 2px solid #d76b60;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: inset 0 -2px #d76b60;
+}
+
+input#btnReset{
+    position: relative;
+    vertical-align: top;
+/*    margin-left: 8em; */
     width: 40%;
     height: 40px;
     padding: 0;

@@ -10,7 +10,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="style.css" type="text/css" media="screen">
-        
+
         <link rel="shortcut icon" href="image/paw.ico">
         <link rel="icon" type="image/ico" href="image/paw.ico">
 

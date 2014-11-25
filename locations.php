@@ -1,9 +1,8 @@
 <?php
 include 'include/top.php';
 ?>
-
-<body>  
-    <p>Content will go here</p>
+<h2>Locations</h2>
+<p>Content will go here</p>
 
 
 

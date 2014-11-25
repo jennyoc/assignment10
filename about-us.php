@@ -2,7 +2,7 @@
 include 'include/top.php';
 ?>
 
-<body>  
+<h2>About Us</h2>
     <p>Content will go here</p>
 
 

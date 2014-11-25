@@ -1,8 +1,7 @@
 <?php
 include 'include/top.php';
 ?>
-
-<body>  
+<h2>Why Adopt?</h2>
     <p>Content will go here</p>
 
 

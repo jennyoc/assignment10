@@ -31,10 +31,10 @@ $url = "https://jocallag.w3.uvm.edu/cs148/assignment10/include/dog.csv";
 
 
 // SECTION: 1c form variables
-$breed = "";
+$breed = " ";
 $size = "";
 $age = "";
-$hypo = "";
+$coat = " ";
 $gender = "";
 $children = "";
 $data = array();
@@ -98,55 +98,57 @@ if (isset($_POST["btnSubmit"])) {
 
         $breed = htmlentities($_POST["lstBreed"], ENT_QUOTES, "UTF-8");
 
+        $coat = htmlentities($_POST["lstCoat"], ENT_QUOTES, "UTF-8");
+
+
 // re-do up
         $children = htmlentities($_POST["lstChildren"], ENT_QUOTES, "UTF-8");
 
 // SECTION: 2c Validation
+        // SECTION: 2e prepare query
+        //$query = "SELECT * ";
 
+        $query = "SELECT fldDogName AS Name, fldBreed AS Breed, fldSize AS Size, fldAge AS Age, fldCoat AS Coat, fldHypo AS Hypoallergenic, fldColor AS Coloring, fldGender AS Gender, fldChildren AS Children  ";
+        $query .= " FROM tblDogs ";
+        $query .= " INNER JOIN tblShelters ON pmkShelterId=fnkShelterId ";
 
-        /*
-          // SECTION: 2e prepare query
-          //$query = "SELECT * ";
+        //here do rest
+        if ($breed != "") {
+            $query .= " AND fldBreed = ? ";
+            $data[] = $breed;
+        }
 
-          $query = "SELECT fldDogName AS Name, fldBreed AS Breed, ";
-          $query .= " FROM tblDogs ";
-          $query .= " INNER JOIN tblShelters ON pmkShelterId=fnkShelterId ";
-          $query .= " WHERE fldStart LIKE ? ";
-          $data[] = $startTime . "%";
+        if ($size != "") {
+            $query .= " AND fldSize = ? ";
+            $data[] = $size;
+        }
 
-
-          //here do rest
-          if ($subject != "") {
-          $query .= " AND fldDepartment = ? ";
-          $data[] = $subject;
+        /* if ($age != "") {
+          $query .= " AND fldAge = ? ";
+          $data[] = $age;
           }
-
-          if ($number != "") {
-          $query .= " AND fldCourseNumber = ? ";
-          $data[] = $number;
-          }
-
-          if ($building != "") {
-          $query .= " AND fldBuilding = ? ";
-          $data[] = $building;
-          }
-
-          if ($professor != "") {
-          $query .= " AND fldLastName LIKE ? ";
-          $data[] = $professor . "%";
-          }
-
-          if ($type != "") {
-          $query .= " AND fldType = ? ";
-          $data[] = $type;
-          }
-
-
-          // execute query using a  prepared statement
-          $results = $thisDatabase->select($query, $data);
-          $numberRecords = count($results);
          * 
          */
+
+        if ($coat != "") {
+            $query .= " AND fldCoat = ? ";
+            $data[] = $coat;
+        }
+
+        if ($gender != "") {
+            $query .= " AND fldGender = ? ";
+            $data[] = $gender;
+        }
+
+        if ($children != "") {
+            $query .= " AND fldChildren = ? ";
+            $data[] = $children;
+        }
+
+
+        // execute query using a  prepared statement
+        $results = $thisDatabase->select($query, $data);
+        $numberRecords = count($results);
     }
 }
 
@@ -212,14 +214,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         $query .= "ORDER BY fldBreed";
 
 
-// Step Three: code can be in initialize variables or where step four needs to be
-// $buildings is an associative array
                         $breed = $thisDatabase->select($query);
 
-// Step Four: prepare output two methods, only do one of them
-
                         $output = array();
-                        $output[] = '<form>';
+
                         $output[] = '<label for="lstBreed">Breed: ';
                         $output[] = '<select id="lstBreed" ';
                         $output[] = '        name="lstBreed"';
@@ -243,85 +241,154 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         ?>
 
                         <!--Size check boxes-->
-    <?php
-    // Step Two: code can be in initialize variables or where step four needs to be
-    $query = "SELECT   ";
-    $query .= "FROM tblDogs ";
+                        <?php
+                        $query = "SELECT DISTINCT fldSize   ";
+                        $query .= "FROM tblDogs ";
+                        $query .= "ORDER BY tblDogs.fldSize DESC ";
 
-// Step Three: code can be in initialize variables or where step four needs to be
-// $buildings is an associative array
-    $size = $thisDatabase->select($query);
+                        $size = $thisDatabase->select($query);
 
-// Step Four: prepare output two methods, only do one of them
-//  Here is how to code it 
-
-    $output = array();
-    $output[] = '<form>';
-    $output[] = '<fieldset class="checkbox">';
-    $output[] = '<legend>Size:</legend>';
+                        $output = array();
+                        $output[] = '<fieldset class="checkbox">';
+                        $output[] = '<legend>Size:</legend>';
 
 
-    foreach ($size as $row) {
+                        foreach ($size as $row) {
 
-        $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldHobby"]) . '"><input type="checkbox" ';
-        $output[] = ' id="chk' . str_replace(" ", "-", $row["fldHobby"]) . '" ';
-        $output[] = ' name="chk' . str_replace(" ", "-", $row["fldHobby"]) . '" ';
-        $output[] = 'value="' . $row["pkHobbyId"] . '">' . $row["fldHobby"];
-        $output[] = '</label>';
-    }
+                            $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldSize"]) . '"><input type="checkbox" ';
+                            $output[] = ' id="chk' . str_replace(" ", "-", $row["fldSize"]) . '" ';
+                            $output[] = ' name="chk' . str_replace(" ", "-", $row["fldSize"]) . '" ';
+                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldSize"];
+                            $output[] = '</label>';
+                        }
 
-    $output[] = '</fieldset>';
+                        $output[] = '</fieldset>';
 
-    print join("\n", $output);  // this prints each line as a separate  line in html
-    ?>
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
+
+                        <!--                        Age check boxes-->
+                        <?php
+                        $query = "SELECT DISTINCT fldStage  ";
+                        $query .= "FROM tblDogs ";
+                        $query .= "ORDER BY fldStage ";
+
+                        $age = $thisDatabase->select($query);
+
+                        $output = array();
+                        $output[] = '<fieldset class="checkbox">';
+                        $output[] = '<legend>Age:</legend>';
+
+
+                        foreach ($age as $row) {
+
+                            $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldStage"]) . '"><input type="checkbox" ';
+                            $output[] = ' id="chk' . str_replace(" ", "-", $row["fldStage"]) . '" ';
+                            $output[] = ' name="chk' . str_replace(" ", "-", $row["fldStage"]) . '" ';
+                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldStage"];
+                            $output[] = '</label>';
+                        }
+
+                        $output[] = '</fieldset>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
+
+                        <!--                        Coat list box-->
+                        <?php
+                        $query = "SELECT DISTINCT fldCoat ";
+                        $query .= "FROM tblDogs ";
+                        $query .= "ORDER BY tblDogs.fldCoat  DESC ";
+
+                        $coat = $thisDatabase->select($query);
+
+                        $output = array();
+                        $output[] = '<label for="lstCoat">Type of coat: ';
+                        $output[] = '<select id="lstCoat" ';
+                        $output[] = '        name="lstCoat"';
+                        $output[] = '        tabindex="150" >';
+
+
+                        foreach ($coat as $row) {
+
+                            $output[] = '<option ';
+                            if ($coat == $row["fldCoat"])
+                                $output[] = ' selected ';
+
+                            $output[] = 'value="' . $row["fldCoat"] . '">' . $row["fldCoat"];
+
+                            $output[] = '</option>';
+                        }
+
+                        $output[] = '</select></label>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
+
 
                         <!--Gender radio buttons-->
-    <?php
-// Step Two: code can be in initialize variables or where step four needs to be
-    $query = "SELECT DISTINCT fldGender ";
-    $query .= "FROM tblDogs ";
+                        <?php
+                        $query = "SELECT DISTINCT fldGender ";
+                        $query .= "FROM tblDogs ";
 
-// Step Three: code can be in initialize variables or where step four needs to be
-// $buildings is an associative array
-    $gender = $thisDatabase->select($query);
+                        $gender = $thisDatabase->select($query);
 
-// Step Four: prepare output two methods, only do one of them
-//  Here is how to code it
+                        $output = array();
+                        $output[] = '<fieldset class="radio">';
+                        $output[] = '<legend>Gender:</legend>';
 
-    $output = array();
-    $output[] = '<form>';
-    $output[] = '<fieldset class="radio">';
-    $output[] = '<legend>Gender:</legend>';
+                        foreach ($gender as $row) {
 
-    foreach ($gender as $row) {
+                            $output[] = '<label for="rad' . str_replace(" ", "-", $row["fldGender"]) . '"><input type="radio" ';
+                            $output[] = ' id="rad' . str_replace(" ", "-", $row["fldGender"]) . '" ';
+                            $output[] = ' name="radGender" ';
 
-        $output[] = '<label for="rad' . str_replace(" ", "-", $row["fldGender"]) . '"><input type="radio" ';
-        $output[] = ' id="rad' . str_replace(" ", "-", $row["fldGender"]) . '" ';
-        $output[] = ' name="radGender" ';
+                            if ($gender == $row["pmkDogId"])
+                                $output[] = " checked ";
 
-        if ($myFavorite == $row["pmkDogId"])
-            $output[] = " checked ";
+                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldGender"];
+                            $output[] = '</label>';
+                        }
 
-        $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldGender"];
-        $output[] = '</label>';
-    }
+                        $output[] = '</fieldset>';
 
-
-    print join("\n", $output);  // this prints each line as a separate  line in html 
-    ?>
+                        print join("\n", $output);  // this prints each line as a separate  line in html 
+                        ?>
 
                         <!-- Children -->
-                        <label for="lstChildren">Good with children:
-                            <select id="lstChildren"
-                                    name="lstChildren"
-                                    tabindex="300" >
-                                <option selected value=""> </option><option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select></label>
+                        <?php
+                        $query = "SELECT DISTINCT fldChildren ";
+                        $query .= "FROM tblDogs ";
+
+                        $children = $thisDatabase->select($query);
+
+                        $output = array();
+                        $output[] = '<fieldset class="radio">';
+                        $output[] = '<legend>Good with children:</legend>';
+
+                        foreach ($children as $row) {
+
+                            $output[] = '<label for="rad' . str_replace(" ", "-", $row["fldChildren"]) . '"><input type="radio" ';
+                            $output[] = ' id="rad' . str_replace(" ", "-", $row["fldChildren"]) . '" ';
+                            $output[] = ' name="radChildren" ';
+
+                            if ($gender == $row["pmkDogId"])
+                                $output[] = " checked ";
+
+                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldChildren"];
+                            $output[] = '</label>';
+                        }
+
+                        $output[] = '</fieldset>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html 
+                        ?>
+
                     </fieldset>
+
                     <fieldset class="buttons">
-                        <legend></legend>
                         <input type="submit" id="btnSubmit" name="btnSubmit" value="Find a dog" tabindex="900" class="button">
+                        <input type="reset" id="btnReset" value="Reset" tabindex="901" class="button">
 
                     </fieldset> <!-- ends buttons -->
 
