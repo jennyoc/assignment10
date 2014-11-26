@@ -1,4 +1,4 @@
-<?php
+<?php 
 //print_r($_POST);
 require_once('../bin/myDatabase.php');
 $dbUserName = get_current_user() . '_reader';
@@ -107,9 +107,9 @@ if (isset($_POST["btnSubmit"])) {
 // SECTION: 2c Validation
         // SECTION: 2e prepare query
 
-        $query = "SELECT fldDogName AS Name, fldBreed AS Breed, fldSize AS Size, fldAge AS Age, fldCoat AS Coat, fldHypo AS Hypoallergenic, fldColor AS Coloring, fldGender AS Gender, fldChildren AS Children  ";
-        $query .= " FROM tblDogs ";
-        $query .= " INNER JOIN tblShelters ON pmkShelterId=fnkShelterId ";
+        $query = "SELECT tblDogs.fldDogName AS Name, tblDogs.fldBreed AS Breed, tblDogs.fldSize AS Size, tblDogs.fldAge AS Age, tblDogs.fldCoat AS Coat, tblDogs.fldHypo AS Hypoallergenic, tblDogs.fldColor AS Coloring, tblDogs.fldGender AS Gender, tblDogs.fldChildren AS Children, tblShelters.fldShelterName AS Shelter  ";
+        $query .= " FROM tblDogs,tblShelters ";
+        $query .= " WHERE tblShelters.pmkShelterId=tblDogs.fnkShelterId ";
 
         if ($breed != "") {
             $query .= " AND fldBreed = ? ";
@@ -193,6 +193,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
     ?>
 
     <article id="main">
+        <h2>Search For Your New Companion Today!</h2>
 
         <form action="search.php"
               method="post"
@@ -200,7 +201,6 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
             <fieldset class="wrapper">
 
                 <fieldset class="wrapperTwo">
-                    <legend>Search For Your New Companion Today!</legend>
                     <fieldset class="search">
                         <!--Breed list box-->
                         <?php

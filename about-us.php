@@ -1,7 +1,7 @@
 <?php
 include 'include/top.php';
 ?>
-<article class="main">
+<article>
     <h2>About Us</h2>
 
 
@@ -13,7 +13,7 @@ include 'include/top.php';
 
 
 
-    <h2 id="su">Jenny O'Callaghan</h2>
+    <h3 id="jo">Jenny O'Callaghan</h3>
     <p>Email: <a href="mailto:jocallag@uvm.edu" target="_top">jocallag@uvm.edu</a></p>
 
 
@@ -23,7 +23,7 @@ include 'include/top.php';
         </div>
     </div>
 
-    <h2 id="ru">Jen Magie</h2>
+    <h3 id="jm">Jen Magie</h3>
     <p>Email: <a href="mailto:jmagie@uvm.edu" target="_top">jmagie@uvm.edu</a></p>
 
 </article>
