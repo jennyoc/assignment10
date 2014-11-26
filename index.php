@@ -10,14 +10,14 @@ include 'include/top.php';
     <section id="gallery"> 
 <!--create a gallery of dog images-->
         
-        <img src="">
-        <img src="">
-        <img src="">
-        <img src="">
-        <img src="">
-        <img src="">
-        <img src="">
-        <img src="">
+        <dl id="simple-gallery">
+            <dt tabindex="1"><img src="images/agnes.jpg" alt height="200" width="200">
+            <dd><img src="images/agnes.jpg" alt >
+            <dt tabindex="2"><img src="images/akay.jpg" alt height="200" width="200">
+<dd><img src="images/akay.jpg" alt >
+<dt tabindex="3"><img src="images/alice.jpg" alt height="200" width="200">
+<dd><img src="images/alice.jpg" alt >
+</dl>
     </section> 
         
         

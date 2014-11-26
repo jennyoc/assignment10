@@ -1,19 +1,14 @@
 <?php
 /* %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
- * the purpose of this page is to display a list of poets sorted 
- * 
- * Written By: Robert Erickson robert.erickson@uvm.edu
- * Last updated on: November 20, 2014
+ * the purpose of this page is to display a list of users sorted
  */
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^
 
 $admin = true;
 include "include/top.php";
+include "include/userAddNav.php";
 ?>
-<nav>
-    <ol>
-        <li class="activePage">Poets</li><li><a href="userForm.php">Add User</a></li>    </ol>
-</nav>
+
 <?php
 
 print "<article>";
@@ -26,8 +21,9 @@ $dbUserName = get_current_user() . '_admin';
 // prepare the sql statement
 $orderBy = "ORDER BY fldLastName";
 
-$query  = "SELECT pmkUserId, fldFirstName, fldLastName, fldEmail, fldPassword ";
-$query .= "FROM tblUser " . $orderBy;
+$query  = "SELECT pmkUserId, fldFirstName, fldLastName, fldEmail, fldPassword, fldConfirmed ";
+$query .= "FROM tblUser ";
+$query .= "WHERE fldConfirmed = 1";
 
 if ($debug)
     print "<p>sql " . $query;
@@ -39,20 +35,21 @@ if ($debug) {
     print_r($users);
     print "</pre>";
 }
-
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 // print out the results
-print "<ol>\n";
+print '<section id="listOfUsers">';
+print "<table>\n";
 
 foreach ($users as $user) {
    
-    print "<li>";
+    print "<tr>";
     if ($admin) {
-        print '<a href="userForm.php?id=' . $user["pmkUserId"] . '">[Edit]</a> ';
+        print '<td><a href="userUpdateForm.php?id=' . $user["pmkUserId"] . '">[Edit]</a></td> ';
     }
-    print $user['fldFirstName'] . "   " . $user['fldLastName'] . "  " . $user['fldEmail'] . "  " . $user['fldPassword'] . "</li>\n";
+    print "<td>".$user['fldFirstName'] . "</td><td>   " . $user['fldLastName'] . "  </td><td>" . $user['fldEmail'] . "</td><td>  " . $user['fldPassword'] . "</td></tr>\n";
 }
-print "</ol>\n";
+print "</table>\n";
+print '</section>';
 print "</article>";
 include "include/footer.php";
 ?>

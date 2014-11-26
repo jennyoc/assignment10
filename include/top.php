@@ -68,28 +68,12 @@
             include "lib/mail-message.php";
             include "../bin/myDatabase.php";
         }
-        if ($path_parts['filename'] == "register") {
-            include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
-        }
-        
-        if ($path_parts['filename'] == "form") {
-            include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
-        }
         if ($path_parts['filename'] == "search") {
             include "lib/validation-functions.php";
             include "lib/mail-message.php";
             include "../bin/myDatabase.php";
         }
-        if ($path_parts['filename'] == "userForm") {
-            include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
-        }
-        if ($path_parts['filename'] == "userList") {
+        if ($path_parts['filename'] == "register") {
             include "lib/validation-functions.php";
             include "lib/mail-message.php";
             include "../bin/myDatabase.php";
@@ -99,7 +83,19 @@
             include "lib/mail-message.php";
             include "../bin/myDatabase.php";
         }
-        if ($path_parts['filename'] == "locations") {
+       
+        if ($path_parts['filename'] == "userAddForm") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        
+        if ($path_parts['filename'] == "userList") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "userUpdateForm") {
             include "lib/validation-functions.php";
             include "lib/mail-message.php";
             include "../bin/myDatabase.php";

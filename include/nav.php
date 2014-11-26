@@ -42,10 +42,10 @@
             print '<li><a href="locations.php">Locations</a></li>';
         }
         
-        if ($path_parts['filename'] == "userForm") {
+        if ($path_parts['filename'] == "userAddForm") {
             print '<li class="activePage">Add a User</li>';
         } else {
-            print '<li><a href="userForm.php">Add a User</a></li>';
+            print '<li><a href="userAddForm.php">Add a User</a></li>';
         }
         ?>
     </ol>
