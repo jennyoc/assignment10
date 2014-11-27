@@ -46,7 +46,7 @@ if (isset($_GET["q"])) {
     $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
     
     
-    $query = "SELECT fldFirstName, fldLastName, fldEmail, fldDateJoined FROM tblUser WHERE pmkUserId = ? ";
+    $query = "SELECT fldFirstName, fldLastName, fldEmail, fldDateJoined FROM tblUsers WHERE pmkUserId = ? ";
     $results = $thisDatabase->select($query, $data);
 
     $firstName = $results[0]["fldFirstName"];
@@ -71,7 +71,7 @@ if (isset($_GET["q"])) {
         if ($debug)
             print "<h1>Confirmed</h1>";
 
-        $query = "UPDATE tblUser SET fldConfirmed=1 WHERE pmkUserId = ? ";
+        $query = "UPDATE tblUsers SET fldConfirmed=1 WHERE pmkUserId = ? ";
         $results = $thisDatabase->update($query, $data);
 
         if ($debug) {

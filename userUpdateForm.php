@@ -3,14 +3,18 @@
 
 include "include/top.php";
 include "include/userAddNav.php";
+$dbUserName = get_current_user() . '_admin';
+$whichPass = "a"; //flag for which one to use.
+$dbName = strtoupper(get_current_user()) . '_Shelter';
+$thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
-$update = true;
+$update = false;
 
 // SECTION: 1a.
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
-$debug = false;
+$debug = true;
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }
@@ -29,30 +33,27 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-$pmkUserId = "";
-$firstName = "";
-$lastName = "";
-$email = "";
-$password = "";
+if (isset($_GET["id"])){
 
-$pmkUserId = $_GET["id"];
-
-$dbUserName = get_current_user() . '_admin';
-$whichPass = "a"; //flag for which one to use.
-$dbName = strtoupper(get_current_user()) . '_Shelter';
-$thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
+$pmkUserId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
 
 $query = 'SELECT fldFirstName, fldLastName, fldEmail, fldPassword ';
-$query .= 'FROM tblUser WHERE pmkUserId = ?';
+$query .= 'FROM tblUsers WHERE pmkUserId = ?';
 
 $results = $thisDatabase->select($query, array($pmkUserId));
 
 
-$dbfirstName = $results[0]["fldFirstName"];
-$dblastName = $results[0]["fldLastName"];
-$dbemail = $results[0]["fldEmail"];
-$dbpassword = $results[0]["fldPassword"];
-
+$firstName = $results[0]["fldFirstName"];
+$lastName = $results[0]["fldLastName"];
+$email = $results[0]["fldEmail"];
+$password = $results[0]["fldPassword"];
+}else{
+    $pmkUserId = -1;
+   $firstName = "";
+    $lastName = "";
+    $email = "";
+    $password = "";
+}
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -111,14 +112,11 @@ if (isset($_POST["btnSubmit"])) {
 // SECTION: 2b Sanitize (clean) data
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
-
-
+    $pmkUserId = htmlentities($_POST["hidUserId"], ENT_QUOTES, "UTF-8");
     if ($pmkUserId > 0) {
         $update = true;
     }
     
-    $pmkUserId = htmlentities($_POST["hidUserId"], ENT_QUOTES, "UTF-8");
-    $data[] = $pmkUserId;
     
     $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
     $data[] = $firstName;
@@ -190,13 +188,27 @@ if (isset($_POST["btnSubmit"])) {
             $thisDatabase->db->beginTransaction();
 
             if ($update) {
-                $query = 'UPDATE tblUser SET ';
+                $query = 'UPDATE tblUsers SET ';
+            }else{
+                $uery = 'INSERT INTO tblUsers SET';
+            }
+                $query .= 'fldFirstName = ?, ';
+                $query .= 'fldLastName = ?, ';
                 $query .= 'fldEmail = ?, ';
                 $query .= 'fldPassword = ?, ';
+                
+                if ($update){
                 $query .= 'WHERE pmkUserId = ?';
                 $data[] = $pmkUserId;
-                
+                print "<p>sql".$query."<p><pre>";
+                print_r($data);
                 $results = $thisDatabase->update($query, $data);
+            }else{
+                $results = $thisDatabase->insert($query, $data);
+                $primaryKey = $thisDatabase->lastInsert();
+                if($debug){
+                    print "<p>pmk=".$primaryKey;
+                }
             }
 
             // all sql statements are done so lets commit to our changes
@@ -256,7 +268,7 @@ if ($dataEntered) { // closing of if marked with: end body submit
     ?>
         <form action="<?php print $phpSelf; ?>"
               method="post"
-              id="frmUpdate">
+              id="frmRegister">
             <fieldset class="wrapper">
                 <legend>Update a current member profile.</legend>
 
@@ -265,7 +277,7 @@ if ($dataEntered) { // closing of if marked with: end body submit
                        >
 
                 <label for="txtFirstName" class="required">First Name
-                    <input type="text" id="txtFirstName" name="txtFirstName" value="<?php print $dbfirstName; ?>" tabindex="120" maxlength="45" placeholder="Please enter your first name"
+                    <input type="text" id="txtFirstName" name="txtFirstName" value="<?php print $firstName; ?>" tabindex="120" maxlength="45" placeholder="Please enter your first name"
     <?php if ($firstNameERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
                            >
@@ -275,7 +287,7 @@ if ($dataEntered) { // closing of if marked with: end body submit
 
                 <label for="txtLastName" class="required">Last Name
                     <input type="text" id="txtLastName" name="txtLastName"
-                           value="<?php print $dblastName; ?>"
+                           value="<?php print $lastName; ?>"
                            tabindex="120" maxlength="45" placeholder="Please enter your last name"
     <?php if ($lastNameERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
@@ -286,7 +298,7 @@ if ($dataEntered) { // closing of if marked with: end body submit
 
                 <label for="txtEmail" class="required">Email
                     <input type="text" id="txtEmail" name="txtEmail"
-                           value="<?php print $dbemail; ?>"
+                           value="<?php print $email; ?>"
                            tabindex="120" maxlength="45" placeholder="Please enter your email"
     <?php if ($emailERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
@@ -294,7 +306,7 @@ if ($dataEntered) { // closing of if marked with: end body submit
                 </label>
                 <label for="txtPassword" class="required">Password
                     <input type="password" id="txtPassword" name="txtPassword"
-                           value="<?php print $dbpassword; ?>"
+                           value="<?php print $password; ?>"
                            tabindex="120" maxlength="45" placeholder="Please enter your password"
     <?php if ($passwordERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
@@ -305,9 +317,9 @@ if ($dataEntered) { // closing of if marked with: end body submit
                     <fieldset class="buttons">
                         <legend></legend>
                         <input type="submit" id="btnSubmit" name="btnSubmit" value="Update User" tabindex="900" class="button">
-                        <input type="submit" id="btnDelete" name="btnDelete" value="Delete User" tabindex="900" class="button">
+                        
+<!--                        <input type="submit" id="btnDelete" name="btnDelete" value="Delete User" tabindex="900" class="button">-->
                     </fieldset> <!-- ends buttons -->
-            </fieldset> <!-- Ends Wrapper -->
         </form>
     <?php
 } // end body submit
@@ -315,10 +327,9 @@ if ($dataEntered) { // closing of if marked with: end body submit
 </article>
 
 <?php
-include "footer.php";
+include "include/footer.php";
 if ($debug)
     print "<p>END OF PROCESSING</p>";
 ?>
-</article>
 </body>
 </html>
