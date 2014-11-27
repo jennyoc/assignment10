@@ -1,4 +1,6 @@
-<?php 
+<?php
+include ("include/top.php");
+
 //print_r($_POST);
 require_once('../bin/myDatabase.php');
 $dbUserName = get_current_user() . '_reader';
@@ -8,7 +10,6 @@ $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 
 
 
-include ("include/top.php");
 // SECTION: 1 Initialize variables
 // 1s. variables for the classroom purposes to help find errors
 $debug = false;
@@ -46,7 +47,7 @@ $breedERROR = false;
 $errorMsg = array();
 
 // array used to hold form values that will be written to a CSV file
-$dataRecord = array();
+$data = array();
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -98,12 +99,15 @@ if (isset($_POST["btnSubmit"])) {
 
         $breed = htmlentities($_POST["lstBreed"], ENT_QUOTES, "UTF-8");
 
+        //size
+        // age
         $coat = htmlentities($_POST["lstCoat"], ENT_QUOTES, "UTF-8");
 
+        $gender = htmlentities($_POST["radGender"], ENT_QUOTES, "UTF-8");
+        $dataRecord[] = $gender;
 
-// re-do up
-        $children = htmlentities($_POST["lstChildren"], ENT_QUOTES, "UTF-8");
-
+        $children = htmlentities($_POST["radChildren"], ENT_QUOTES, "UTF-8");
+        $dataRecord[] = $children;
 // SECTION: 2c Validation
         // SECTION: 2e prepare query
 
@@ -122,9 +126,9 @@ if (isset($_POST["btnSubmit"])) {
         }
 
         if ($age != "") {
-          $query .= " AND fldStage = ? ";
-          $data[] = $age;
-          }
+            $query .= " AND fldStage = ? ";
+            $data[] = $age;
+        }
 
         if ($coat != "") {
             $query .= " AND fldCoat = ? ";
@@ -240,6 +244,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         <?php
                         $query = "SELECT DISTINCT fldSize   ";
                         $query .= "FROM tblDogs ";
+                        // $query .= "WHERE fldBreed = '?' ";
                         $query .= "ORDER BY tblDogs.fldSize DESC ";
 
                         $size = $thisDatabase->select($query);
@@ -394,27 +399,27 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
         </form>
 
     </article>
-<article class="aside">
-    <h4>Age (Years)</h4>
-    <h5>
-        Puppy: 0-2<br><br>
-        Adult: 3-5<br><br>
-        Senior: 6-9<br><br>
-        Geriatric: 10+ 
-    </h5>
-    <h4>Size (Pounds)</h4>
-    <h5>
-        Small: Under 25<br><br>
-        Medium: 26-40<br><br>
-        Large: 41-70<br><br>
-        XL: 70+
-    </h5>
 
-    
-</article>
+    <article class="aside">
+        <h4>Age (Years)</h4>
+        <h5>
+            Puppy: 0-2<br><br>
+            Adult: 3-5<br><br>
+            Senior: 6-9<br><br>
+            Geriatric: 10+ 
+        </h5>
+        <h4>Size (Pounds)</h4>
+        <h5>
+            Small: Under 25<br><br>
+            Medium: 26-40<br><br>
+            Large: 41-70<br><br>
+            XL: 70+
+        </h5>
+
+
+    </article>
     <?php
 }
-// end body submit
 include ("include/footer.php");
 ?>
 </body>

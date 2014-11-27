@@ -41,6 +41,12 @@
         } else {
             print '<li><a href="locations.php">Locations</a></li>';
         }
+        
+        if ($path_parts['filename'] == "userList") {
+            print '<li class="activePage">Admin</li>';
+        } else {
+            print '<li><a href="userList.php">Admin</a></li>';
+        }
         ?>
     </ol>
 </nav>

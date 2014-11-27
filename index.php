@@ -9,7 +9,8 @@ include 'include/top.php';
     Humane Society of Chittenden County, Franklin County Humane Society, &AMP; Central Vermont Humane Society.</p>
     
     <p>We hope this site will connect dogs in need for a home with a loving owner!</p>
-
+    
+<iframe width="640" height="360" src="//www.youtube.com/embed/6M_l2OsdCkg?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
 </article>
 </body>
     <?php 

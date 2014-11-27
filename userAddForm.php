@@ -1,5 +1,6 @@
 <?php
 include 'include/top.php';
+include 'include/editNav.php';
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
@@ -33,6 +34,7 @@ $email = "";
 $password = "";
 $password2 = "";
 
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1d form error flags
@@ -41,6 +43,8 @@ $lastNameERROR = false;
 $emailERROR = false;
 $passwordERROR = false;
 $password2ERROR = false;
+
+
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -90,6 +94,8 @@ if (isset($_POST["btnSubmit"])) {
     
     $password2 = htmlentities($_POST["txtPassword2"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $password2;
+    
+
     
     
 
@@ -142,7 +148,6 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = "Your passwords do not match.";
         $password2Error = true;        
     }
-
 
     
     
@@ -220,7 +225,7 @@ if (isset($_POST["btnSubmit"])) {
             //Put forms information into a variable to print on the screen
             //
 
-            $messageA = '<h3>Welcome, '.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h3>';
+            $messageA = '<h2>Welcome,'.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h2>';
             $messageB = "<p>Click this link to confirm your registration: ";
             $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
             $messageB .= "<p>or copy and paste this url into a web browser: ";
@@ -250,7 +255,7 @@ if (isset($_POST["btnSubmit"])) {
 ?>
 
 <!-- ######################     Article Section   ############################## -->
-<article>
+<article id="main">
     <?php
 //####################################
 //
@@ -304,6 +309,7 @@ if (isset($_POST["btnSubmit"])) {
                     <fieldset class="contact">
 
 
+
                         <label for="txtFirstName" class="required">First Name
                             <input type="text" id="txtFirstName" name="txtFirstName"
                                    value="<?php print $firstName; ?>"
@@ -344,7 +350,7 @@ if (isset($_POST["btnSubmit"])) {
                         <label for="txtPassword2" class="required">Confirm Password
                             <input type="password" id="txtPassword2" name="txtPassword2"
                                    value=""
-                                   tabindex="120" maxlength="45" placeholder="Create a password"
+                                   tabindex="120" maxlength="45" placeholder="Re-enter your password"
                                    <?php if ($password2ERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >
@@ -355,7 +361,7 @@ if (isset($_POST["btnSubmit"])) {
                 </fieldset> <!-- ends wrapper Two -->
                 <fieldset class="buttons">
                     <legend></legend>
-                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Register" tabindex="900" class="button">
+                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Add" tabindex="900" class="button">
                 </fieldset> <!-- ends buttons -->
             </fieldset> <!-- Ends Wrapper -->
         </form>

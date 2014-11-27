@@ -23,28 +23,28 @@
 //
 //  $domain = "https://www.uvm.edu" or http://www.uvm.edu;
 
-          $domain = "http://";
-          if (isset($_SERVER['HTTPS'])) {
-          if ($_SERVER['HTTPS']) {
-          $domain = "https://";
-          }
-          }
+        $domain = "http://";
+        if (isset($_SERVER['HTTPS'])) {
+            if ($_SERVER['HTTPS']) {
+                $domain = "https://";
+            }
+        }
 
-          $server = htmlentities($_SERVER['SERVER_NAME'], ENT_QUOTES, "UTF-8");
+        $server = htmlentities($_SERVER['SERVER_NAME'], ENT_QUOTES, "UTF-8");
 
-          $domain .= $server;
+        $domain .= $server;
 
-          $phpSelf = htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES, "UTF-8");
+        $phpSelf = htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES, "UTF-8");
 
-          $path_parts = pathinfo($phpSelf);
+        $path_parts = pathinfo($phpSelf);
 
-          if ($debug) {
-          print "<p>Domain" . $domain;
-          print "<p>php Self" . $phpSelf;
-          print "<p>Path Parts<pre>";
-          print_r($path_parts);
-          print "</pre>";
-          }
+        if ($debug) {
+            print "<p>Domain" . $domain;
+            print "<p>php Self" . $phpSelf;
+            print "<p>Path Parts<pre>";
+            print_r($path_parts);
+            print "</pre>";
+        }
 
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -56,7 +56,63 @@
         if ($path_parts['filename'] == "search") {
             include "lib/validation-functions.php";
         }
-        ?>	
+
+        if ($path_parts['filename'] == "index") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "about-us") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "adopt") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+
+        if ($path_parts['filename'] == "register") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "confirmation") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+
+        if ($path_parts['filename'] == "userAddForm") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+
+        if ($path_parts['filename'] == "userList") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "userUpdateForm") {
+            include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "shelterUpdateForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "shelterList") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "shelterAddForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        ?>
 
     </head>
     <!-- ################ body section ######################### -->
@@ -66,4 +122,3 @@
 
     include "nav.php";
     ?>
-
