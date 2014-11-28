@@ -52,13 +52,14 @@ $password2ERROR = false;
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
 $errorMsg = array();
+$dataRecord = array();
 
 // used for building email message to be sent and displayed
 $mailed = false;
 $messageA = "";
 $messageB = "";
 $messageC = "";
-$messageD="";
+
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -172,7 +173,7 @@ if (isset($_POST["btnSubmit"])) {
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = 'INSERT INTO tblUser(fldfirstName, fldLastName, fldEmail, fldPassword) VALUES (?,?,?,?)';
+            $query = 'INSERT INTO tblUsers(fldfirstName, fldLastName, fldEmail, fldPassword) VALUES (?,?,?,?)';
             $data = array($firstName,$lastName, $email, md5($password)); //md5($password) creates an encryption of the                     password to be displayed in the database - this is done for security reasons.
             if ($debug) {
                 print "<p>sql " . $query;
@@ -206,7 +207,7 @@ if (isset($_POST["btnSubmit"])) {
             //#################################################################
             // create a key value for confirmation
 
-            $query = "SELECT fldDateJoined FROM tblUser WHERE pmkUserId=" . $primaryKey;
+            $query = "SELECT fldDateJoined FROM tblUsers WHERE pmkUserId=" . $primaryKey;
             $results = $thisDatabase->select($query);
 
             $dateSubmitted = $results[0]["fldDateJoined"];

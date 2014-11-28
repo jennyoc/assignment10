@@ -9,15 +9,30 @@
 
 /********** - Main Page Layout - **********/
 body{
-    margin: 36px auto;
+    margin: auto;
     width: 90%;
     background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
 }
 
 h1{
     color: darkcyan;
     font-family: "Raleway", Helvetica, Arial, sans-serif;
     font-size: 40px;
+}
+
+h2{
+    margin-left: auto;
+    margin-right: auto;
+    /* padding-left: 3em; */
+    text-align: center;
+}
+
+h4{
+    text-decoration: underline;
+    font-weight: bold;
 }
 
 #page{
@@ -28,6 +43,7 @@ h1{
     float: left;
     width: 62.8888889%; /* 566px / 900px */
 }
+
 /********** - Header Section - **********/
 
 
@@ -38,51 +54,35 @@ img{
 }
 /*********** - Aside on index.php - **********/
 .slider{ 
-        width:673px;
-	min-height:400px;
-	float:left;	
-	margin:0px;
-	text-align:center;
-	padding:50px 0px;
-        display: inline;
-	list-style-type: none;
-	padding-right: 3em;
-        
-}
+    width:673px;
+    min-height:400px;
+    float:left;	
+    margin:0px;
+    text-align:center;
+    padding:50px 0px;
+    display: inline;
+    list-style-type: none;
+    padding-right: 3em;
 
-dl#simple-gallery { 
-    position: relative; 
-}
-dl#simple-gallery dt { 
-    width: 75px; 
-}
-dl#simple-gallery dd { 
-    opacity: 0; 
-    position: absolute; 
-    top: 20px; 
-    left: 200px; 
-}
-dl#simple-gallery dt:hover + dd, dl#simple-gallery dt:focus + dd { 
-    opacity: 1; 
 }
 
 /********** - Navigation Section - **********/
-nav ol li {
-    margin-left: auto;
+nav{
+    margin-left: -5em;
     margin-right: auto;
-    display: inline-flex;
-    padding-left: 30px;
-    text-transform: uppercase;
+    display: block;
+    text-align: center;
 }
-#userListNav ol li {
-    list-style-type: none;
+ol{
+    list-style: none;
     display: inline-flex;
-    padding-left: 20px; 
+
 }
 
-#listOfUsers ol li {
-    display: block;
-    list-style-type: none;
+li{
+    display: inline;
+    padding-left: 30px;
+    text-transform: uppercase;
 }
 
 a{
@@ -91,17 +91,98 @@ a{
 /********** - - **********/
 article h1, article p, article table{
     padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ---------------------- About Us --------------------------------- */
+article.main {
+    float: right;
+    padding-right:2em;
+}
+
+/* --- Video --- */
+iframe {
+    margin-bottom: 25px;
+    margin-top: 25px;
+    border: solid #4b4b4b 5px;
+    border-radius: 3px;
+    display:block;
+    margin-right:auto;
+    margin-left:auto;
+    width:500px;
+}
+
+img.su {float: right;}
+img.ru {float: right;}
+
+
+
+/* --- Image --- */
+
+.userprofile {
+    padding: 10px 0px 0px 0px;
+    text-align: right;
+    list-style-type: none;
+    float: right;
+    margin-right: 10%;
+}
+
+.mypic {
+    border-radius: 100px;
+    position: relative;
+    display: block;
+    margin: 10px auto;
+    box-shadow: 0px 0px 0px 4px #4b4b4b, 0px 0px 10px 10px rgba(0, 0, 0, 0.3);
+    width: 150px;
+    height: 150px;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: cover;
+}
+
+.mypic2 {
+    border-radius: 100px;
+    position: relative;
+    display: block;
+    margin: 10px auto;
+    box-shadow: 0px 0px 0px 4px #4b4b4b, 0px 0px 10px 10px rgba(0, 0, 0, 0.3);
+    width: 150px;
+    height: 150px;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: cover;
+}
+
+.glow {
+    display: block;
+    width: 109px;
+    height: 107px;
+    top: 0px;
+    left: 50%;
+    margin-left: -55px;
+    box-shadow: inset 90px 110px 0px -90px rgba(255,255,255,.15);
+    border-radius: 50%;
 }
 
 /***************** Footer Section ********************/
 footer{
     clear: both;
     padding: 0.8em 5.33333333%; /* 48px / 900px */
-    line-height: 0.1em;
     text-align: center;
     font-family: "Raleway", Helvetica, Arial, sans-serif;
-    color: darkcyan;
+    background-color: #0b0b0b;
+    color: #f0f0f0;
+    padding: 5px;
+    height: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: bottom;
+    /*position: relative;*/
+    display: block;
+    text-align: center;
 }
+
 
 /***************** Form Section ********************/
 #form article#main{
@@ -109,23 +190,38 @@ footer{
     margin: auto; /* because of the fixed width this centers the form */
     text-align: left;
     max-width: 600px; /* not repsonive but fixed */
+    border: 0;
+}
+form#frmRegister{
+    margin-left: 15em;
 }
 
 /* need to clear any floats that may exist */
 fieldset{
     clear: both;
+    border: 0;
 }
 fieldset.wrapper {
     margin: auto;
+    border: 0;
+
+}
+fieldset.radio{
+    border:1px;
+    border-style: dotted;
+}
+fieldset.checkbox{
+    border:1px;
+    border-style: dotted;
 }
 /* just pushes content to left side of the box. */
 fieldset.search{
     float: left;
     margin-left: 4em;
-    border: none;
 }
 fieldset.buttons{
     border:none;
+    margin-left: 9em;
 }
 
 /* when you look at the labels this pushes then next to the input and right
@@ -133,8 +229,8 @@ aligns them. Display block means they are each on their own line. */
 fieldset.search label{
     display: block;
     text-align: right;
-font-family: 'Raleway', sans-serif;
-font-size: 16px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
     line-height: 25px;
     color: darkcyan;
     /* pushes the text to the right where they line up */
@@ -146,9 +242,28 @@ fieldset.search input, fieldset.search select{
 input#btnSubmit{
     position: relative;
     vertical-align: top;
-    margin-left: 8em;
+    /*    margin-left: 8em; */
     width: 40%;
-    height: 40px;
+    height: 35px;
+    padding: 0;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(black, .25);
+    background: #f0776c;
+    border: 0;
+    border-bottom: 2px solid #d76b60;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: inset 0 -2px #d76b60;
+}
+
+input#btnReset{
+    position: relative;
+    vertical-align: top;
+    /*    margin-left: 8em; */
+    width: 20%;
+    height: 35px;
     padding: 0;
     font-size: 20px;
     color: white;
@@ -183,6 +298,9 @@ label {
 table{
     border-collapse: collapse;
     border: groove lightblue;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2em;
 }
 table, tr, td,th {
     padding: .2em;
@@ -204,4 +322,21 @@ tbody{
     /*   display:block;
        height: 10em;
        overflow: auto;*/
+}
+
+
+
+
+
+article {
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+
+html {
+    background-color: #CEF6C6;
 }

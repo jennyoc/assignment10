@@ -22,7 +22,7 @@ $dbUserName = get_current_user() . '_admin';
 $orderBy = "ORDER BY fldLastName";
 
 $query  = "SELECT pmkUserId, fldFirstName, fldLastName, fldEmail, fldPassword, fldConfirmed ";
-$query .= "FROM tblUser ";
+$query .= "FROM tblUsers ";
 $query .= "WHERE fldConfirmed = 1";
 
 if ($debug)

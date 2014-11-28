@@ -3,10 +3,8 @@
 
 include "include/top.php";
 include "include/userAddNav.php";
-$dbUserName = get_current_user() . '_admin';
-$whichPass = "a"; //flag for which one to use.
-$dbName = strtoupper(get_current_user()) . '_Shelter';
-$thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
+
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
@@ -21,6 +19,8 @@ if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
 if ($debug)
     print "<p>DEBUG MODE IS ON</p>";
 
+$errorMsg = array();
+$data = array();
 // SECTION: 1b Security
 //
 // define security variable to be used in SECTION 2a.
@@ -33,27 +33,12 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-if (isset($_GET["id"])){
+$pmkUserId = "";
+$firstName = "";
+$lastName = "";
+$email = "";
+$password = "";
 
-$pmkUserId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
-
-$query = 'SELECT fldFirstName, fldLastName, fldEmail, fldPassword ';
-$query .= 'FROM tblUsers WHERE pmkUserId = ?';
-
-$results = $thisDatabase->select($query, array($pmkUserId));
-
-
-$firstName = $results[0]["fldFirstName"];
-$lastName = $results[0]["fldLastName"];
-$email = $results[0]["fldEmail"];
-$password = $results[0]["fldPassword"];
-}else{
-    $pmkUserId = -1;
-   $firstName = "";
-    $lastName = "";
-    $email = "";
-    $password = "";
-}
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -70,31 +55,31 @@ $passwordERROR = false;
 // SECTION: 1e misc variables
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
-$errorMsg = array();
-$data = array();
-$dataEntered = false;
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-//SECTION: Process for when the delete button is clicked.
-/*if (isset($_POST["btnDelete"])) {
 
-    $query2 = 'DELETE FROM tblUser WHERE pmkUserId =' . $pmkUserId;
+// SECTION: 2
 
-    $dataEntered = $thisDatabase->db->commit();
-
-    try {
-        if ($debug)
-            print "<p>transaction complete ";
-    } catch (PDOException $e) {
-        $thisDatabase->db->rollback();
-        if ($debug)
-            print "Error!: " . $e->getMessage() . "</br>";
-        $errorMsg[] = "There was a problem with accepting the data please contact us directly.";
-    }
-}
-*/
-// SECTION: 2 Process for when the form is submitted
+$dbUserName = get_current_user() . '_admin';
+$whichPass = "a"; //flag for which one to use.
+$dbName = strtoupper(get_current_user()) . '_Shelter';
+$thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 //
+if (isset($_GET["id"])){
+
+$pmkUserId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
+
+$query = 'SELECT fldFirstName, fldLastName, fldEmail, fldPassword ';
+$query .= 'FROM tblUsers WHERE pmkUserId = ?';
+$results = $thisDatabase->select($query, array($pmkUserId));
+
+
+$firstName = $results[0]["fldFirstName"];
+$lastName = $results[0]["fldLastName"];
+$email = $results[0]["fldEmail"];
+$password = $results[0]["fldPassword"];
+}
+
 if (isset($_POST["btnSubmit"])) {
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -113,10 +98,10 @@ if (isset($_POST["btnSubmit"])) {
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
     $pmkUserId = htmlentities($_POST["hidUserId"], ENT_QUOTES, "UTF-8");
-    if ($pmkUserId > 0) {
+        if ($pmkUserId > 0) {
         $update = true;
     }
-    
+   
     
     $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
     $data[] = $firstName;
@@ -135,7 +120,6 @@ if (isset($_POST["btnSubmit"])) {
 //
 // SECTION: 2c Validation
 //
-
 
     if ($firstName == "") {
         $errorMsg[] = "Please enter your first name";
@@ -189,28 +173,15 @@ if (isset($_POST["btnSubmit"])) {
 
             if ($update) {
                 $query = 'UPDATE tblUsers SET ';
-            }else{
-                $uery = 'INSERT INTO tblUsers SET';
-            }
-                $query .= 'fldFirstName = ?, ';
-                $query .= 'fldLastName = ?, ';
-                $query .= 'fldEmail = ?, ';
-                $query .= 'fldPassword = ?, ';
-                
-                if ($update){
-                $query .= 'WHERE pmkUserId = ?';
+                $query .= ' fldFirstName = ?, ';
+                $query .= ' fldLastName = ?, ';
+                $query .= ' fldEmail = ?, ';
+                $query .= ' fldPassword = ?, ';
+                $query .= ' WHERE pmkUserId = ?';
                 $data[] = $pmkUserId;
-                print "<p>sql".$query."<p><pre>";
-                print_r($data);
                 $results = $thisDatabase->update($query, $data);
-            }else{
-                $results = $thisDatabase->insert($query, $data);
-                $primaryKey = $thisDatabase->lastInsert();
-                if($debug){
-                    print "<p>pmk=".$primaryKey;
-                }
             }
-
+print $query;
             // all sql statements are done so lets commit to our changes
             $dataEntered = $thisDatabase->db->commit();
 
@@ -222,8 +193,10 @@ if (isset($_POST["btnSubmit"])) {
                 print "Error!: " . $e->getMessage() . "</br>";
             $errorMsg[] = "There was a problem with accepting the data please contact us directly.";
         }
+        
+        
     } // end form is valid
-} // ends if form was submitted.
+}// ends if form was submitted.
 //#############################################################################
 //
 // SECTION 3 Display Form
@@ -240,7 +213,7 @@ if (isset($_POST["btnSubmit"])) {
 //
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
-if ($dataEntered) { // closing of if marked with: end body submit
+if ($dataEntered){ // closing of if marked with: end body submit
     print "<h1>Record Saved</h1> ";
     print $pmkUserId;
     print $firstName;

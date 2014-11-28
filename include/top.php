@@ -55,24 +55,17 @@
 
         if ($path_parts['filename'] == "index") {
             include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
         }
         if ($path_parts['filename'] == "about-us") {
             include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
         }
         if ($path_parts['filename'] == "adopt") {
             include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
         }
         if ($path_parts['filename'] == "search") {
             include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
         }
+        
         if ($path_parts['filename'] == "register") {
             include "lib/validation-functions.php";
             include "lib/mail-message.php";
@@ -91,13 +84,22 @@
         }
         
         if ($path_parts['filename'] == "userList") {
-            include "lib/validation-functions.php";
-            include "lib/mail-message.php";
             include "../bin/myDatabase.php";
         }
         if ($path_parts['filename'] == "userUpdateForm") {
             include "lib/validation-functions.php";
-            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "dogAddForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        
+        if ($path_parts['filename'] == "dogList") {
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "dogUpdateForm") {
+            include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
         ?>	
