@@ -37,7 +37,7 @@ $orderBy = "ORDER BY fldDogName";
 
 $query  = "SELECT pmkDogId, fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldHypo, fldColor, fldGender, fldChildren, fldShelterName ";
 $query .= "FROM tblDogs, tblShelters ";
-//$query .= "WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ";
+$query .= "WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ";
 
 if ($debug)
     print "<p>sql " . $query;

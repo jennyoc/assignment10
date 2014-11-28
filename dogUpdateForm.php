@@ -246,7 +246,7 @@ if ($dataEntered){ // closing of if marked with: end body submit
                        >
                         <label for="txtDogName" class="required">Dog Name
                             <input type="text" id="txtDogName" name="txtDogName"
-                                   value="<?php print $dogName; ?>"
+                                   value="<?php print $name; ?>"
                                    tabindex="120" maxlength="45" placeholder="Ex: <i>Murphey</i>"
                                    <?php if ($dogNameERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
@@ -254,9 +254,9 @@ if ($dataEntered){ // closing of if marked with: end body submit
                         </label>
                         <label for="txtBreed" class="required">Breed Name
                             <input type="text" id="txtBreedName" name="txtBreedName"
-                                   value="<?php print $breedName; ?>"
+                                   value="<?php print $breed; ?>"
                                    tabindex="120" maxlength="45" placeholder="Ex: <i>Bulldog</i>"
-                                   <?php if ($breedNameERROR) print 'class="mistake"'; ?>
+                                   <?php if ($breedERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >
                         </label>
