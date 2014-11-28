@@ -1,6 +1,6 @@
 <?php
 include "include/top.php";
-include "include/dogAddNav.php";
+include "include/editNav.php";
 
 /* %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
  * the purpose of this page is to display a list of users sorted
@@ -37,7 +37,7 @@ $orderBy = "ORDER BY fldDogName";
 
 $query  = "SELECT pmkDogId, fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldHypo, fldColor, fldGender, fldChildren, fldShelterName ";
 $query .= "FROM tblDogs, tblShelters ";
-$query .= "WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ";
+//$query .= "WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ";
 
 if ($debug)
     print "<p>sql " . $query;

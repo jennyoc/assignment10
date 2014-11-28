@@ -1,6 +1,6 @@
 <?php
 include 'include/top.php';
-include 'include/dogAddNav.php';
+include 'include/editNav.php';
 
     $dbUserName = get_current_user() . '_admin';
     $whichPass = "a"; //flag for which one to use.

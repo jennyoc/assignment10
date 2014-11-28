@@ -102,6 +102,19 @@
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
+        
+        if ($path_parts['filename'] == "shelterAddForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        
+        if ($path_parts['filename'] == "shelterList") {
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "shelterUpdateForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
         ?>	
 
     </head>

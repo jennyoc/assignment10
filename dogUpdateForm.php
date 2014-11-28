@@ -1,6 +1,6 @@
 <?php
 include 'include/top.php';
-include 'include/dogAddNav.php';
+include 'include/editNav.php';
 
     $dbUserName = get_current_user() . '_admin';
     $whichPass = "a"; //flag for which one to use.
@@ -169,9 +169,9 @@ if(!securityCheck(true))  {
             $query .= 'tblDogs.fldColor = ?, ';
             $query .= 'tblDogs.fldGender = ?, ';
             $query .= 'tblDogs.fldChildren = ?, ';
-            $query .= 'tblShelters.fldShelterName = ?, ';
+            $query .= 'tblShelters.fldShelterName = ? ';
             $query .= 'WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ';
-            $query .= 'AND tblDogs.pmkDogId =?';
+            $query .= 'AND tblDogs.pmkDogId = ? ';
             $data[] = $pmkDogId;
             print_r($data);
             $results = $thisDatabase->update($query, $data);

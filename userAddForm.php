@@ -1,6 +1,6 @@
 <?php
 include 'include/top.php';
-include 'include/userAddNav.php';
+include 'include/editNav.php';
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables

@@ -1,6 +1,6 @@
 <?php
 /* %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
- * the purpose of this page is to display a list of users sorted
+ * the purpose of this page is to display a list of shelters sorted
  */
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^
 
@@ -19,34 +19,34 @@ $dbUserName = get_current_user() . '_admin';
     
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 // prepare the sql statement
-$orderBy = "ORDER BY fldLastName";
+$orderBy = "ORDER BY fldShelterName";
 
-$query  = "SELECT pmkUserId, fldFirstName, fldLastName, fldEmail, fldPassword, fldConfirmed ";
-$query .= "FROM tblUsers ";
-$query .= "WHERE fldConfirmed = 1";
+$query  = "SELECT pmkShelterId, fldShelterName, fldAddress, fldCity, fldState, fldZip, fldPhone ";
+$query .= "FROM tblShelters " . $orderBy;
 
 if ($debug)
     print "<p>sql " . $query;
 
-$users = $thisDatabase->select($query);
+$shelters = $thisDatabase->select($query);
 
 if ($debug) {
     print "<pre>";
-    print_r($users);
+    print_r($shelters);
     print "</pre>";
 }
+
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 // print out the results
-print '<section id="listOfUsers">';
+print '<section id="listOfShelters">';
 print "<table>\n";
 
-foreach ($users as $user) {
+foreach ($shelters as $shelter) {
    
     print "<tr>";
     if ($admin) {
-        print '<td><a href="userUpdateForm.php?id=' . $user["pmkUserId"] . '">[Edit]</a></td> ';
+        print '<td><a href="shelterUpdateForm.php?id=' . $shelter["pmkShelterId"] . '">[Edit]</a></td> ';
     }
-    print "<td>".$user['fldFirstName'] . "</td><td>   " . $user['fldLastName'] . "  </td><td>" . $user['fldEmail'] . "</td><td>  " . $user['fldPassword'] . "</td></tr>\n";
+    print "<td>".$shelter['fldShelterName'] . "</td><td>   " . $shelter['fldAddress'] . "  </td><td>" . $shelter['fldCity'] . "</td><td>  " . $shelter['fldState'] . "</td><td>" . $shelter['fldZip'] . "</td><td>" . $shelter['fldPhone'] . "</td></tr>\n";
 }
 print "</table>\n";
 print '</section>';
@@ -55,9 +55,3 @@ include "include/footer.php";
 ?>
 </body>
 </html>
-
-
-
-
-
-
