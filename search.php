@@ -397,7 +397,9 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
             </fieldset> <!-- Ends Wrapper -->
         </form>
-
+<?php
+include 'viewAllDogs.php';
+?>
     </article>
 
     <article class="aside">
@@ -415,8 +417,6 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
             Large: 41-70<br><br>
             XL: 70+
         </h5>
-
-
     </article>
     <?php
 }

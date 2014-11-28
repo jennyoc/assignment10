@@ -186,8 +186,8 @@ if (isset($_POST["btnSubmit"])) {
 
                 $query .= 'fldShelterName = ?, ';
                 $query .= 'fldAddress = ?, ';
-                $query .= 'fldCity = ? ';
-                $query .= 'fldState = ? ';
+                $query .= 'fldCity = ?, ';
+                $query .= 'fldState = ?, ';
                 $query .= 'fldZip = ? ';
 
                 $query .= 'WHERE pmkShelterId = ?';

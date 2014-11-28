@@ -211,10 +211,10 @@ if (isset($_POST["btnSubmit"])) {
 
             if ($update) {
                 $query = 'UPDATE tblUsers SET ';
-                $query .= 'fldFirstName = "?", ';
-                $query .= 'fldLastName = "?", ';
-                $query .= 'fldEmail = "?", ';
-                $query .= 'fldPassword = "?", ';
+                $query .= 'fldFirstName = ?, ';
+                $query .= 'fldLastName = ?, ';
+                $query .= 'fldEmail = ?, ';
+                $query .= 'fldPassword = ? ';
                 $query .= 'WHERE pmkUserId = ?';
                 $data[] = $pmkUserId;
 

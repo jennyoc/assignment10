@@ -21,7 +21,7 @@ $dbUserName = get_current_user() . '_admin';
 // prepare the sql statement
 $orderBy = "ORDER BY fldShelterName";
 
-$query  = "SELECT pmkShelterId, fldShelterName, fldAddress, fldCity, fldState, fldZip, fldPhone ";
+$query  = "SELECT pmkShelterId, fldShelterName, fldAddress, fldCity, fldState, fldZip ";
 $query .= "FROM tblShelters " . $orderBy;
 
 if ($debug)
