@@ -12,7 +12,7 @@ include 'include/editNav.php';
 //
 // SECTION: 1a.
 // variables for the classroom purposes to help find errors.
-$debug = true;
+$debug = false;
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }
@@ -38,10 +38,11 @@ $size = "";
 $age = "";
 $stage = "";
 $coat = "";
-$hypo = "";
 $color = "";
 $gender = "";
 $children = "";
+$shelterName = "";
+$fnkShelterId = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -52,10 +53,10 @@ $sizeERROR = false;
 $ageERROR = false;
 $stageERROR = false;
 $coatERROR = false;
-$hypoERROR = false;
 $colorERROR = false;
 $genderERROR = false;
 $childrenERROR = false;
+$shelterNameERROR = false;
 
 
 
@@ -108,15 +109,14 @@ if (isset($_POST["btnSubmit"])) {
     
     $coat = htmlentities($_POST["lstCoat"], ENT_QUOTES, "UTF-8");
     
-    $hypo = htmlentities($_POST["chkHypo"], ENT_QUOTES, "UTF-8");
-    
     $color = htmlentities($_POST["txtColor"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $color;
     
-    $gender = htmlentities($_POST["radGender"], ENT_QUOTES, "UTF-8");
+    $gender = htmlentities($_POST["lstGender"], ENT_QUOTES, "UTF-8");
     
-    $children = htmlentities($_POST["chkChildren"], ENT_QUOTES, "UTF-8");
+    $children = htmlentities($_POST["lstChildren"], ENT_QUOTES, "UTF-8");
     
+    $shelterName = htmlentities($_POST["lstShelterName"], ENT_QUOTES, "UTF-8");
     
    
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -125,55 +125,27 @@ if (isset($_POST["btnSubmit"])) {
    
     
     // Validation section
-    if ($dogName == "") {
-        $errorMsg[] = "Please enter the dog's name";
-        $dogNameERROR = true;
-    } elseif (!verifyAlphaNum($dogName)) {
-        $errorMsg[] = "The dog name appears to contain incorrect characters.";
+    
+    if($dogName == "") {
+        $errorMsg[] = "Please select the dog's name.";
         $dogNameERROR = true;
     }
     
-    if ($breed == "") {
-        $errorMsg[] = "Please enter the dog breed.";
-        $breedERROR = true;
-    } elseif (!verifyAlphaNum($breed)) {
-        $errorMsg[] = "The dog name appears to contain incorrect characters.";
-        $breedERROR = true;
-    }
-    if ($size == "") {
-        $errorMsg[] = "Please select the dog's size.";
-        $sizeERROR = true;
-    }
     if ($age == "") {
-        $errorMsg[] = "Please select the dog's age.";
-        $ageERROR = true;
+        $ageERROR = false;
     }elseif (!verifyAlphaNum($age)) {
         $errorMsg[] = "The age appears to contain incorrect characters.";
         $ageERROR = true;
-    }
+    }   
     
-    if ($stage == "") {
-        $errorMsg[] = "Please select the dog's stage.";
-        $stageERROR = true;
-    }
-    if ($coat == "") {
-        $errorMsg[] = "Please select the dog's coat.";
-        $coatERROR = true;
-    }
-    if ($color == "") {
-        $errorMsg[] = "Please enter the dog's color.";
-        $colorERROR = true;
-    } elseif (!verifyAlphaNum($color)) {
-        $errorMsg[] = "The dog color appears to contain incorrect characters.";
-        $colorERROR = true;
-    }
     if($gender == "") {
         $errorMsg[] = "Please select the dog's gender.";
         $genderERROR = true;
     }
-    if ($children == "") {
-        $errorMsg[] = "Please select if the dog is ok with children.";
-        $childrenERROR = true;
+    
+    if ($shelterName == ""){
+        $errorMsg[] = "Please select the shelter where this dog is located.";
+        $shelterNameERROR = true;
     }
 
 // SECTION: 2d Process Form - Passed Validation
@@ -192,8 +164,8 @@ if (isset($_POST["btnSubmit"])) {
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = 'INSERT INTO tblDogs(fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldHypo, fldColor, fldGender, fldChildren) VALUES (?,?,?,?,?,?,?,?,?,?)';
-            $data = array($dogName, $breed, $size, $age, $stage, $coat, $hypo, $color, $gender, $children); 
+            $query = 'INSERT INTO tblDogs(fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldColor, fldGender, fldChildren) VALUES (?,?,?,?,?,?,?,?,?)';
+            $data = array($dogName, $breed, $size, $age, $stage, $coat, $color, $gender, $children); 
             
             if ($debug) {
                 print "<p>sql " . $query;
@@ -222,28 +194,13 @@ if (isset($_POST["btnSubmit"])) {
         
         // If the transaction was successful, give success message
         if ($dataEntered) {
-            if ($debug)
-                print "<p>data entered now prepare keys ";
-            //#################################################################
 
-          //#################################################################
-            
             //Put forms information into a variable to print on the screen
-            //
+            //Add a query to insert the fnkShelterId in tblDogs to correlate with which ShelterName was selected from tblShelters. This will display the newly added dog into the current dogs display table. 
 
             $messageA = '<h2>Thank you for adding a dog to our database!</h2>';
             $messageB = "<p>This is the information you have added:  ";
-            $messageB .= "Dog Name:  .'$dogName'";
-            $messageB .= "Breed:  .'$breed'";
-            $messageB .= "Size:  .'$size'";
-            $messageB .= "Age:  .'$age'";
-            $messageB .= "Stage:  .'$stage'";
-            $messageB .= "Coat:  .'$coat'";
-            $messageB .= "Hypoallergenic:  .'$hypo'";
-            $messageB .= "Color:  .'$color'";
-            $messageB .= "Gender:  .'$gender'";
-            $messageB .= "Good with children:  .'$children'</p>";
-            $messageC = '<p>If you have an image of the dog please <a href="jmagie.w3.uvm.edu/cs148/assignment10/about-us.php>contact us</a> and we will post a photo of the dog to our gallery page.</p>';
+            $messageB .= "$dataEntered</p>";
        
             //##############################################################
    
@@ -278,7 +235,7 @@ include "include/header.php";
             print "not ";
         }
         print "been processed</h3>";
-        print $messageA . $messageB . $messageC;
+        print $messageA . $messageB;
     } else {
 //####################################
 //
@@ -304,8 +261,8 @@ include "include/header.php";
             <fieldset class="wrapper">
                 <legend>Add a dog today!</legend>
                 <fieldset class="wrapperTwo">
-                    <legend>Please complete the following form with the dogs information</legend>
-                        <label for="txtDogName" class="required">Dog Name
+                    <legend>Please complete the following form with as much of the dogs information that is known.<br> * denotes a required field.</legend>
+                        <label for="txtDogName" class="required">*Dog Name
                             <input type="text" id="txtDogName" name="txtDogName"
                                    value="<?php print $dogName; ?>"
                                    tabindex="120" maxlength="45" placeholder="Ex: <i>Murphey</i>"
@@ -313,7 +270,7 @@ include "include/header.php";
                                    onfocus="this.select()"
                                    >
                         </label>
-                        <label for="txtBreed" class="required">Breed Name
+                        <label for="txtBreed">Breed Name
                             <input type="text" id="txtBreed" name="txtBreed"
                                    value="<?php print $breed; ?>"
                                    tabindex="120" maxlength="45" placeholder="Ex: <i>Bulldog</i>"
@@ -335,6 +292,7 @@ include "include/header.php";
                         $output[] = '<select id="lstSize" ';
                         $output[] = '        name="lstSize"';
                         $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Size:</option>';
 
 
                         foreach ($size as $row) {
@@ -373,6 +331,7 @@ include "include/header.php";
                         $output[] = '<select id="lstStage" ';
                         $output[] = '        name="lstStage"';
                         $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Stage:</option>';
 
 
                         foreach ($stage as $row) {
@@ -403,6 +362,7 @@ include "include/header.php";
                         $output[] = '<select id="lstCoat" ';
                         $output[] = '        name="lstCoat"';
                         $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Coat:</option>';
 
 
                         foreach ($coat as $row) {
@@ -420,15 +380,9 @@ include "include/header.php";
 
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
+                   
                     
-                    <label for="chkHypo">
-                        <input type="checkbox" id="chkHypo" 
-                  name="chkHypo" 
-                  value="Hypo"
-                  <?php if ($hypo) print ' checked '; ?>
-                  tabindex="420">Hypoallergenic</label>
-                    
-                    <label for="txtColor" class="required">Color
+                    <label for="txtColor">Color
                             <input type="text" id="txtColor" name="txtColor"
                                    value="<?php print $color; ?>"
                                    tabindex="120" maxlength="45" placeholder="Enter the dogs color"
@@ -436,41 +390,96 @@ include "include/header.php";
                                    onfocus="this.select()"
                                    >
                         </label>
-                    <!--Gender radio buttons-->
-                        <?php
-                        $query = "SELECT pmkDogId, fldGender ";
+                    
+                    <?php
+                        $query = "SELECT DISTINCT fldGender ";
                         $query .= "FROM tblDogs ";
-                        $query .= "GROUP BY fldGender ";
 
                         $gender = $thisDatabase->select($query);
 
                         $output = array();
-                        $output[] = '<legend>Gender:</legend>';
+                        $output[] = '<label for="lstGender" class="required">*Gender: ';
+                        $output[] = '<select id="lstGender" ';
+                        $output[] = '        name="lstGender"';
+                        $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Gender:</option>';
+
 
                         foreach ($gender as $row) {
 
-                            $output[] = '<label for="rad' . str_replace(" ", "-", $row["fldGender"]) . '"><input type="radio" ';
-                            $output[] = ' id="rad' . str_replace(" ", "-", $row["fldGender"]) . '" ';
-                            $output[] = ' name="radGender" ';
+                            $output[] = '<option ';
+                            if ($gender == $row["fldGender"])
+                                $output[] = ' selected ';
 
-                            if ($gender == $row["pmkDogId"])
-                                $output[] = " checked ";
+                            $output[] = 'value="' . $row["fldGender"] . '">' . $row["fldGender"];
 
-                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldGender"];
-                            $output[] = '</label>';
+                            $output[] = '</option>';
                         }
 
+                        $output[] = '</select></label>';
 
-                        print join("\n", $output);  // this prints each line as a separate  line in html 
+                        print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
-                        <label for="chkChildren">
-                        <input type="checkbox" id="chkChildren" 
-                  name="chkChildren" 
-                  value="Children"
-                  <?php if ($children) print ' checked '; ?>
-                  tabindex="420">Good with children?</label>
                     
+                        <?php
+                        $query = "SELECT DISTINCT fldChildren ";
+                        $query .= "FROM tblDogs ";
+
+                        $children = $thisDatabase->select($query);
+
+                        $output = array();
+                        $output[] = '<label for="lstChildren">Good with Children?: ';
+                        $output[] = '<select id="lstChildren" ';
+                        $output[] = '        name="lstChildren"';
+                        $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Not Applicable</option>';
+
+                        
+                        foreach ($children as $row) {
+
+                            $output[] = '<option ';
+                            if ($children == $row["fldChildren"])
+                                $output[] = ' selected ';
+
+                            $output[] = 'value="' . $row["fldChildren"] . '">' . $row["fldChildren"];
+
+                            $output[] = '</option>';
+                        }
+
+                        $output[] = '</select></label>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
                     
+                    <?php
+                        $query = "SELECT DISTINCT fldShelterName ";
+                        $query .= "FROM tblShelters ";
+
+                        $shelterName = $thisDatabase->select($query);
+
+                        $output = array();
+                        $output[] = '<label for="lstShelterName" class="required">*Shelter Name: ';
+                        $output[] = '<select id="lstShelterName" ';
+                        $output[] = '        name="lstShelterName"';
+                        $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Shelter Name:</option>';
+
+                        
+                        foreach ($shelterName as $row) {
+
+                            $output[] = '<option ';
+                            if ($shelterName == $row["fldShelterName"])
+                                $output[] = ' selected ';
+
+                            $output[] = 'value="' . $row["fldShelterName"] . '">' . $row["fldShelterName"];
+
+                            $output[] = '</option>';
+                        }
+
+                        $output[] = '</select></label>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
                     
                     
                             

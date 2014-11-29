@@ -64,6 +64,8 @@
         }
         if ($path_parts['filename'] == "search") {
             include "lib/validation-functions.php";
+            include "lib/mail-message.php";
+            include "../bin/myDatabase.php";
         }
         
         if ($path_parts['filename'] == "register") {

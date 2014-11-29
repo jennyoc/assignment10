@@ -82,10 +82,10 @@ if (isset($_POST["btnSubmit"])) {
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
     $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $firstName;
+    $dataRecord[] = ucfirst($firstName);
     
     $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $lastName;
+    $dataRecord[] = ucfirst($lastName);
 
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     $dataRecord[] = $email;

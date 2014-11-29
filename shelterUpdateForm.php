@@ -221,6 +221,26 @@ if (isset($_POST["btnSubmit"])) {
 } // ends if form was submitted.
 //#############################################################################
 //
+if (isset($_POST["btnDelete"])) {
+    $dataEntered = false;
+    try {
+            $thisDatabase->db->beginTransaction();
+
+
+                $query = "DELETE FROM tblShelters WHERE pmkShelterId = '$pmkShelterId' ";
+                $results = $thisDatabase->delete($query, array($pmkShelterId));
+                $dataEntered = $thisDatabase->db->commit();
+
+            if ($debug)
+                print "<p>transaction complete ";
+        } catch (PDOExecption $e) {
+            $thisDatabase->db->rollback();
+            if ($debug)
+                print "Error!: " . $e->getMessage() . "</br>";
+            $errorMsg[] = "There was a problem with accpeting your data please contact us directly.";
+        }
+}
+    
 // SECTION 3 Display Form
 //
 ?>
@@ -340,7 +360,8 @@ if (isset($_POST["btnSubmit"])) {
                 <fieldset class="buttons">
                     <legend></legend>
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Update Shelters" tabindex="900" class="button">
-                    <input type="reset" id="btnReset" name="btnReset" value="Reset" tabindex="900" class="button">
+                    <input type="submit" id="btnDelete" name="btnDelete" value="Delete Shelter Record" tabindex="901" class="button">
+                    <input type="reset" id="btnReset" name="btnReset" value="Reset" tabindex="902" class="button">
                 </fieldset> <!-- ends buttons -->
             </fieldset> <!-- Ends Wrapper -->
         </form>
