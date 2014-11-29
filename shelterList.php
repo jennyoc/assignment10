@@ -21,7 +21,7 @@ $dbUserName = get_current_user() . '_admin';
 // prepare the sql statement
 $orderBy = "ORDER BY fldShelterName";
 
-$query  = "SELECT pmkShelterId, fldShelterName, fldAddress, fldCity, fldState, fldZip ";
+$query  = "SELECT pmkShelterId, fldShelterName, fldAddress, fldCity, fldState, fldZip, fldPhone ";
 $query .= "FROM tblShelters " . $orderBy;
 
 if ($debug)
@@ -46,7 +46,7 @@ foreach ($shelters as $shelter) {
     if ($admin) {
         print '<td><a href="shelterUpdateForm.php?id=' . $shelter["pmkShelterId"] . '">[Edit]</a></td> ';
     }
-    print "<td>".$shelter['fldShelterName'] . "</td><td>   " . $shelter['fldAddress'] . "  </td><td>" . $shelter['fldCity'] . "</td><td>  " . $shelter['fldState'] . "</td><td>" . $shelter['fldZip'] . "</td></tr>\n";
+    print "<td>".$shelter['fldShelterName'] . "</td><td>   " . $shelter['fldAddress'] . "  </td><td>" . $shelter['fldCity'] . "</td><td>  " . $shelter['fldState'] . "</td><td>" . $shelter['fldZip'] . "</td><td>" . $shelter['fldPhone'] . "</td></tr>\n";
 }
 print "</table>\n";
 print '</section>';

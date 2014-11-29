@@ -14,9 +14,19 @@ $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
-$update = false;
-
+$update = true;
+$debug= true;
 // SECTION: 1a.
+// $debug = true;
+if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
+    $debug = true;
+}
+if ($debug)
+    print "<p>DEBUG MODE IS ON</p>";
+
+$errorMsg = array();
+$data = array();
+$dataEntered = false;
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1b Security
@@ -33,17 +43,18 @@ $yourURL = $domain . $phpSelf;
 
 if (isset($_GET["id"])) {
     $pmkShelterId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
-
-    $query = 'SELECT fldShelterName, fldAddress, fldCity, fldState, fldZip ';
+    $data[] = $pmkShelterId;
+    $query = 'SELECT fldShelterName, fldAddress, fldCity, fldState, fldZip, fldPhone ';
     $query .= 'FROM tblShelters WHERE pmkShelterId = ?';
 
-    $results = $thisDatabase->select($query, array($pmkShelterId));
+    $results = $thisDatabase->select($query, $data);
 
     $shelterName = $results[0]["fldShelterName"];
     $address = $results[0]["fldAddress"];
     $city = $results[0]["fldCity"];
     $state = $results[0]["fldState"];
     $zip = $results[0]["fldZip"];
+    $phone = $results[0]["fldPhone"];
 }
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -57,15 +68,14 @@ $addressERROR = false;
 $cityERROR = false;
 $stateERROR = false;
 $zipERROR = false;
+$phoneERROR = false;
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
-$errorMsg = array();
-$data = array();
-$dataEntered = false;
+
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -90,6 +100,7 @@ if (isset($_POST["btnSubmit"])) {
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
     $pmkShelterId = htmlentities($_POST["hidShelterId"], ENT_QUOTES, "UTF-8");
+    
     if ($pmkShelterId > 0) {
         $update = true;
     }
@@ -109,7 +120,9 @@ if (isset($_POST["btnSubmit"])) {
 
     $zip = (int) htmlentities($_POST["txtZip"], ENT_QUOTES, "UTF-8");
     $data[] = $zip;
-
+    
+    $phone = (int) htmlentities($_POST["txtPhone"], ENT_QUOTES, "UTF-8");
+    $data[] = $phone;
 
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -121,20 +134,13 @@ if (isset($_POST["btnSubmit"])) {
     if ($shelterName == "") {
         $errorMsg[] = "Please enter new shelter name";
         $shelterNameERROR = true;
-    } elseif (!verifyAlphaNum($shelterName)) {
-        $errorMsg[] = "The name appears to have extra character.";
-        $shelterName = true;
     }
-    /*
+    
       if ($address == "") {
       $errorMsg[] = "Please enter a new address";
       $addressERROR = true;
-      } elseif (!verifyAlphaNum($address)) {
-      $errorMsg[] = "The address appears to have extra character.";
-      $addressERROR = true;
       }
-     * 
-     */
+    
 
     if ($city == "") {
         $errorMsg[] = "Please enter a new city";
@@ -145,11 +151,8 @@ if (isset($_POST["btnSubmit"])) {
     }
 
     if ($state == "") {
-        $errorMsg[] = "Please enter a new state";
+        $errorMsg[] = "Please enter a state like: 'VT'";
         $stateERROR = true;
-    } elseif (!verifyAlphaNum($state)) {
-        $errorMsg[] = "The state appears to have extra character.";
-        $state = true;
     }
 
     if ($zip == "") {
@@ -158,6 +161,14 @@ if (isset($_POST["btnSubmit"])) {
     } elseif (!verifyNumeric($zip)) {
         $errorMsg[] = "The zip code appears to have extra character.";
         $zipERROR = true;
+    }
+    
+    if ($phone == "") {
+        $errorMsg[] = "Please enter a phone number";
+        $zipERROR = true;
+    } elseif (!verifyPhone($phone)) {
+        $errorMsg[] = "The phone number appears to have extra character.";
+        $phoneERROR = true;
     }
 
 
@@ -188,7 +199,8 @@ if (isset($_POST["btnSubmit"])) {
                 $query .= 'fldAddress = ?, ';
                 $query .= 'fldCity = ?, ';
                 $query .= 'fldState = ?, ';
-                $query .= 'fldZip = ? ';
+                $query .= 'fldZip = ?, ';
+                $query .= 'fldPhone = ? ';
 
                 $query .= 'WHERE pmkShelterId = ?';
                 $data[] = $pmkShelterId;
@@ -231,6 +243,7 @@ if (isset($_POST["btnSubmit"])) {
         print "City: " . $city . "<br>";
         print "State: " . $state . "<br>";
         print "Zip: " . $zip . "<br>";
+        print "Phone: " . $phone . "<br>";
     } else {
 //####################################
 //
@@ -271,7 +284,7 @@ if (isset($_POST["btnSubmit"])) {
                 <input type="hidden" id="hidShelterId" name="hidShelterId"
                        value="<?php print $pmkShelterId; ?>"
                        >
-
+                
                 <label for="txtShelterName" class="required">Shelter Name:
                     <input type="text" id="txtShelterName" name="txtShelterName"
                            value="<?php print $shelterName; ?>"
@@ -315,10 +328,19 @@ if (isset($_POST["btnSubmit"])) {
                            <?php if ($zipERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
                            >
-                </label>   
+                </label> 
+                <label for="txtPhone" class="required">Phone Number:
+                    <input type="text" id="txtPhone" name="txtPhone"
+                           value="<?php print $phone; ?>"
+                           tabindex="100" maxlength="45" placeholder="Enter phone number"
+                           <?php if ($phoneERROR) print 'class="mistake"'; ?>
+                           onfocus="this.select()"
+                           >
+                </label>
                 <fieldset class="buttons">
                     <legend></legend>
-                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Update" tabindex="900" class="button">
+                    <input type="submit" id="btnSubmit" name="btnSubmit" value="Update Shelters" tabindex="900" class="button">
+                    <input type="reset" id="btnReset" name="btnReset" value="Reset" tabindex="900" class="button">
                 </fieldset> <!-- ends buttons -->
             </fieldset> <!-- Ends Wrapper -->
         </form>

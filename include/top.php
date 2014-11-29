@@ -112,6 +112,20 @@
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
+        
+        if ($path_parts['filename'] == "dogAddForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        
+        if ($path_parts['filename'] == "dogList") {
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "dogUpdateForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        
         ?>
 
     </head>

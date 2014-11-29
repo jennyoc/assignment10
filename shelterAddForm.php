@@ -27,7 +27,7 @@ $yourURL = $domain . $phpSelf;
 //
 // Initialize variables one for each form element
 // in the order they appear on the form
-$pmkShelterId = 6;
+//$pmkShelterId = "";
 $shelterName = "";
 $address = "";
 $city = "";
@@ -90,6 +90,9 @@ if (isset($_POST["btnSubmit"])) {
 
     $zip = (int) htmlentities($_POST["txtZip"], ENT_QUOTES, "UTF-8");
     $data[] = $zip;
+    
+    $phone = (int) htmlentities($_POST["txtPhone"], ENT_QUOTES, "UTF-8");
+    $data[] = $phone;
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -104,16 +107,12 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = "The name appears to have extra character.";
         $shelterName = true;
     }
-/*
+
     if ($address == "") {
         $errorMsg[] = "Please enter a new address";
         $addressERROR = true;
-    } elseif (!verifyAlphaNum($address)) {
-        $errorMsg[] = "The address appears to have extra character.";
-        $addressERROR = true;
     }
- * 
- */
+
 
     if ($city == "") {
         $errorMsg[] = "Please enter a new city";
@@ -138,6 +137,14 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = "The zip code appears to have extra character.";
         $zipERROR = true;
     }
+    
+    if ($phone == "") {
+        $errorMsg[] = "Please enter a phone number";
+        $phoneERROR = true;
+    } elseif (!verifyPhone($phone)) {
+        $errorMsg[] = "The phone number appears to have extra character.";
+        $phoneERROR = true;
+    }
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -155,6 +162,7 @@ if (isset($_POST["btnSubmit"])) {
         // SECTION: 2e Save Data
         //
 
+        $primaryKey = "";
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
@@ -162,9 +170,10 @@ if (isset($_POST["btnSubmit"])) {
             $query = 'INSERT INTO tblShelters SET ';
             $query .= 'fldShelterName = ?, ';
             $query .= 'fldAddress = ?, ';
-            $query .= 'fldCity = ? ';
-            $query .= 'fldState = ? ';
-            $query .= 'fldZip = ? ';
+            $query .= 'fldCity = ?, ';
+            $query .= 'fldState = ?, ';
+            $query .= 'fldZip = ?, ';
+            $query .= 'fldPhone = ? ';
 
 
             if ($debug) {
@@ -216,6 +225,7 @@ if ($dataEntered) { // closing of if marked with: end body submit
         print "City: " . $city . "<br>";
         print "State: " . $state . "<br>";
         print "Zip: " . $zip . "<br>";
+        print "Phone: " . $phone . "<br>";
     } else {
 //####################################
 //
@@ -253,9 +263,6 @@ if ($dataEntered) { // closing of if marked with: end body submit
             <fieldset class="wrapper">
                 <legend>Add a new shelter</legend>
 
-                <input type="hidden" id="hidShelterId" name="hidShelterId"
-                       value="<?php print $pmkShelterId; ?>"
-                       >
 
                 <label for="txtShelterName" class="required">Shelter Name:
                     <input type="text" id="txtShelterName" name="txtShelterName"
@@ -300,10 +307,19 @@ if ($dataEntered) { // closing of if marked with: end body submit
                            <?php if ($zipERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
                            >
-                </label>   
+                </label> 
+                <label for="txtPhone" class="required">Phone Number:
+                    <input type="text" id="txtPhone" name="txtPhone"
+                           value="<?php print $phone; ?>"
+                           tabindex="100" maxlength="45" placeholder="Enter phone number"
+                           <?php if ($phoneERROR) print 'class="mistake"'; ?>
+                           onfocus="this.select()"
+                           >
+                </label>
                 <fieldset class="buttons">
                     <legend></legend>
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Add Shelter" tabindex="900" class="button">
+                    <input type="reset" id="btnReset" name="btnReset" value="Reset" tabindex="900" class="button">
                 </fieldset> <!-- ends buttons -->
             </fieldset> <!-- Ends Wrapper -->
         </form>

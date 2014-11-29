@@ -243,7 +243,7 @@ input#btnSubmit{
     position: relative;
     vertical-align: top;
     /*    margin-left: 8em; */
-    width: 40%;
+    width: 60%;
     height: 35px;
     padding: 0;
     font-size: 20px;
@@ -301,6 +301,10 @@ label {
     display: block;
     font-size: .9em;
     font-weight: bold;
+}
+
+label.required{
+    padding-bottom: 5px;
 }
 /* style the errors in the form so they are visible */
 .mistake {

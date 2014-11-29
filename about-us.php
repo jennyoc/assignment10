@@ -18,7 +18,7 @@ include 'include/top.php';
 
 
     <div class="userprofile">
-        <div style="background-image: url('http://jocallag.w3.uvm.edu/assignment10/image/');" class="mypic2" id="mypic2">
+        <div style="background-image: url('https://jocallag.w3.uvm.edu/cs148/assignment10/image/nikki.jpeg');" class="mypic2" id="mypic2">
             <span class="glow">&nbsp;</span>
         </div>
     </div>

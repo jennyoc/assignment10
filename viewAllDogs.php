@@ -25,7 +25,7 @@ if ($debug)
 
 // 1b. security: define security variable to be used in SECTION 2a.
 $yourURL = $domain . $phpSelf;
-$url = "https://jocallag.w3.uvm.edu/cs148/assignment10/include/dog.csv";
+$url = "https://jocallag.w3.uvm.edu/cs148/assignment10/include/tblDogs.csv";
 /* ##### Step one
  *
  * create your database object using the appropriate database username
@@ -113,7 +113,7 @@ if (isset($_POST["btnSubmit"])) {
 // SECTION: 2c Validation
         // SECTION: 2e prepare query
 
-        $query = "SELECT tblDogs.fldDogName AS Name, tblDogs.fldBreed AS Breed, tblDogs.fldSize AS Size, tblDogs.fldAge AS Age, tblDogs.fldCoat AS Coat, tblDogs.fldHypo AS Hypoallergenic, tblDogs.fldColor AS Coloring, tblDogs.fldGender AS Gender, tblDogs.fldChildren AS Children, tblShelters.fldShelterName AS Shelter  ";
+        $query = "SELECT tblDogs.fldDogName AS Name, tblDogs.fldBreed AS Breed, tblDogs.fldSize AS Size, tblDogs.fldAge AS Age, tblDogs.fldCoat AS Coat, tblDogs.fldColor AS Coloring, tblDogs.fldGender AS Gender, tblDogs.fldChildren AS Children, tblShelters.fldShelterName AS Shelter  ";
         $query .= " FROM tblDogs,tblShelters ";
         $query .= " WHERE tblShelters.pmkShelterId=tblDogs.fnkShelterId ";
 

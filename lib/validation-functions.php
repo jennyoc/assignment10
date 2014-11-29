@@ -38,6 +38,14 @@ function verifyLetters ($testString) {
     return (preg_match($regex, $testString));
 
 }
+
+function verifyAddress ($testString) {
+    
+    $regex = "/^([A-Z][-A-Z ]+)\s+(\d+)$/i";
+    
+    return (preg_match($regex, $testString));
+}
+
 function isUser($teststring) {
     global $thisDatabase;
     $query = "SELECT fldEmail FROM tblUser WHERE fldEmail=? ";

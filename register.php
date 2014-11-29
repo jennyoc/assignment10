@@ -220,7 +220,7 @@ if (isset($_POST["btnSubmit"])) {
             //Put forms information into a variable to print on the screen
             //
 
-            $messageA = '<h3>Welcome, '.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h3>';
+            $messageA = '<h2>Welcome,'.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h2>';
             $messageB = "<p>Click this link to confirm your registration: ";
             $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
             $messageB .= "<p>or copy and paste this url into a web browser: ";
@@ -250,7 +250,8 @@ if (isset($_POST["btnSubmit"])) {
 ?>
 
 <!-- ######################     Article Section   ############################## -->
-<article>
+<article id="main">
+    <h2>Become a member today!</h2>
     <?php
 //####################################
 //
@@ -298,12 +299,11 @@ if (isset($_POST["btnSubmit"])) {
               method="post"
               id="frmRegister">
             <fieldset class="wrapper">
-                <legend>Become a member today!</legend>
-                <fieldset class="wrapperTwo">
                     <legend>Please complete the following form with your contact information</legend>
+                <fieldset class="wrapperTwo">
                     <fieldset class="contact">
 
-
+                       
                         <label for="txtFirstName" class="required">First Name
                             <input type="text" id="txtFirstName" name="txtFirstName"
                                    value="<?php print $firstName; ?>"
@@ -313,6 +313,7 @@ if (isset($_POST["btnSubmit"])) {
                                    >
                         </label>
                         
+
 
                         <label for="txtLastName" class="required">Last Name
                             <input type="text" id="txtLastName" name="txtLastName"
@@ -328,7 +329,7 @@ if (isset($_POST["btnSubmit"])) {
                         <label for="txtEmail" class="required">Email
                             <input type="text" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
-                                   tabindex="120" maxlength="45" placeholder="Enter a valid email address"
+                                   tabindex="120" maxlength="50" placeholder="Enter a valid email"
                                    <?php if ($emailERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >

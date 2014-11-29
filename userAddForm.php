@@ -52,13 +52,14 @@ $password2ERROR = false;
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
 $errorMsg = array();
+$dataRecord = array();
 
 // used for building email message to be sent and displayed
 $mailed = false;
 $messageA = "";
 $messageB = "";
 $messageC = "";
-$messageD="";
+
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -303,9 +304,8 @@ if (isset($_POST["btnSubmit"])) {
               method="post"
               id="frmRegister">
             <fieldset class="wrapper">
-                <legend>Become a member today!</legend>
+                <legend>Add a new member</legend>
                 <fieldset class="wrapperTwo">
-                    <legend>Please complete the following form with your contact information</legend>
                     <fieldset class="contact">
 
 
@@ -319,6 +319,7 @@ if (isset($_POST["btnSubmit"])) {
                                    >
                         </label>
                         
+
 
                         <label for="txtLastName" class="required">Last Name
                             <input type="text" id="txtLastName" name="txtLastName"
