@@ -1,37 +1,17 @@
 <?php
 include 'include/top.php';
-
 ?>
-<link rel="stylesheet" href="image.css" type="text/css" media="screen">
-        
-<body>  
-    <h2>Welcome to Puppy LOVERMONT!</h2>
-    <p>Our goal is to find loving homes for as many rescued dogs as possible. We have created a search tool where you can find the next loving pooch to take home. 
-        
-        Make sure you sign up to become a member of Puppy Lovermont to receive email newsletters, as well as notification when new dogs arrive at our network of shelters.</p>
+<article>
+    <h2>Welcome to Puppy LoVermont!</h2>
+ <p>This website and database were created to help desiring owners
+    find there newest companion. Information collected about the dogs were collected from five 
+    shelters across Vermont. Shelters: All Breed Rescue, Rutland County Humane Society, 
+    Humane Society of Chittenden County, Franklin County Humane Society, &AMP; Central Vermont Humane Society.</p>
     
-<!--create a gallery of dog images-->
-        <div class="container">
-    <a href="#">
-        <img class="thumb" src="images/charlieThumb.jpeg" width="">
-        <img class="big" src="images/charlie.jpg">
-    </a>
- 
-    <a href="#">
-        <img class="thumb" src="images/dotThumb.jpeg">
-        <img class="big" src="images/dot.jpg">
-    </a>
- 
-    <a href="#">
-        <img class="thumb" src="images/eddieThumb.jpeg">
-        <img class="big" src="images/eddie.jpg">
-    </a>
- 
-    <a href="#">
-        <img class="big featured" src="images/dsthumbslider-2.jpg">
-    </a>
-</div>
-
+    <p>We hope this site will connect dogs in need for a home with a loving owner!</p>
+    
+<iframe width="640" height="360" src="//www.youtube.com/embed/6M_l2OsdCkg?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+</article>
 </body>
     <?php 
     include 'include/footer.php';

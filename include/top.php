@@ -11,8 +11,8 @@
 
         <link rel="stylesheet" href="style.css" type="text/css" media="screen">
         
-        <link rel="shortcut icon" href="images/paw.ico">
-        <link rel="icon" type="image/ico" href="images/paw.ico">
+        <link rel="shortcut icon" href="image/paw.ico">
+        <link rel="icon" type="image/ico" href="image/paw.ico">
 
         <?php
         $debug = false;
@@ -52,6 +52,10 @@
 //
 
         require_once('lib/security.php');
+        
+        if ($path_parts['filename'] == "search") {
+            include "lib/validation-functions.php";
+        }
 
         if ($path_parts['filename'] == "index") {
             include "lib/validation-functions.php";
@@ -61,11 +65,6 @@
         }
         if ($path_parts['filename'] == "adopt") {
             include "lib/validation-functions.php";
-        }
-        if ($path_parts['filename'] == "search") {
-            include "lib/validation-functions.php";
-            include "lib/mail-message.php";
-            include "../bin/myDatabase.php";
         }
         
         if ($path_parts['filename'] == "register") {
@@ -92,6 +91,11 @@
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
+        if ($path_parts['filename'] == "userDelete") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        
         if ($path_parts['filename'] == "dogAddForm") {
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
@@ -101,6 +105,10 @@
             include "../bin/myDatabase.php";
         }
         if ($path_parts['filename'] == "dogUpdateForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "dogDelete") {
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
@@ -114,6 +122,10 @@
             include "../bin/myDatabase.php";
         }
         if ($path_parts['filename'] == "shelterUpdateForm") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "dogDelete") {
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }

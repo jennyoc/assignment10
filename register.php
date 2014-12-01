@@ -220,15 +220,11 @@ if (isset($_POST["btnSubmit"])) {
             //Put forms information into a variable to print on the screen
             //
 
-            $messageA = '<h2>Welcome,'.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h2>';
+            $messageA = '<h2>Welcome, '.$firstName.'! Thank you for registering to become a member of Puppy Lovermont.</h2>';
             $messageB = "<p>Click this link to confirm your registration: ";
             $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
             $messageB .= "<p>or copy and paste this url into a web browser: ";
-            $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
-            $messageC = '<p>Make sure you remember your login email and password so you can access the member section of the website.</p>';
-            $messageC .= "<p><b>Email:</b><i>   " . $email . "</i></p>";
-            $messageC .= "<p><b>Password:</b><i>   " . $password . "</i></p>";
-            $messageD = "<p>You will receive an email shortly with a link to confirm your membership.</p>";        
+            $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";       
             //##############################################################
             //
             // email the form's information
@@ -239,7 +235,7 @@ if (isset($_POST["btnSubmit"])) {
             $from = "PUPPY LOVERMONT REGISTRATION <noreply@puppylovermont.com>";
             $subject = "PUPPY LOVERMONT: CONFIRM REGISTRATION";
 
-            $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
+            $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB);
         } //data entered
     } // end form is valid
 } // ends if form was submitted.
@@ -302,14 +298,11 @@ include "header.php";
               method="post"
               id="frmRegister">
             <fieldset class="wrapper">
-                <legend>Become a member today!</legend>
+                <legend>Become a member today to receive the latest updates about our network of shelters and our dogs!</legend>
                 <fieldset class="wrapperTwo">
-                    <legend>Please complete the following form with your contact information</legend>
+                    <legend>Please complete the following form with your contact information. - ALL fields are required.</legend>
                     <fieldset class="contact">
-
-                        </label>
-
-
+                        
                         <label for="txtFirstName" class="required">First Name
                             <input type="text" id="txtFirstName" name="txtFirstName"
                                    value="<?php print $firstName; ?>"

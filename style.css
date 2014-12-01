@@ -239,42 +239,74 @@ fieldset.search label{
 fieldset.search input, fieldset.search select{
     width: 25em; /* works with above to be the same size for the boxes */
 }
-input#btnSubmit{
+#btnSubmit{
     position: relative;
     vertical-align: top;
-    /*    margin-left: 8em; */
-    width: 40%;
-    height: 35px;
-    padding: 0;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(black, .25);
-    background: #f0776c;
-    border: 0;
-    border-bottom: 2px solid #d76b60;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: inset 0 -2px #d76b60;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background-color:#f9f9f9;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    cursor:pointer;
+    color:#666666;
+    font-family:arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ffffff;
 }
 
-input#btnReset{
+#btnSubmit:hover{
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;
+    
+}
+
+#btnReset{
     position: relative;
     vertical-align: top;
-    /*    margin-left: 8em; */
-    width: 20%;
-    height: 35px;
-    padding: 0;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(black, .25);
-    background: #f0776c;
-    border: 0;
-    border-bottom: 2px solid #d76b60;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: inset 0 -2px #d76b60;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background-color:#f9f9f9;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    cursor:pointer;
+    color:#666666;
+    font-family:arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ffffff;
+}
+#btnReset:hover{
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;
+    
+}
+
+#btnDelete{
+    position: relative;
+    vertical-align: top;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background-color:#f9f9f9;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    cursor:pointer;
+    color:#666666;
+    font-family:arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ffffff;
+}
+#btnDelete:hover{
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;
+    
 }
 
 label {
@@ -282,6 +314,10 @@ label {
     display: block;
     font-size: .9em;
     font-weight: bold;
+}
+
+label.required{
+    padding-bottom: 5px;
 }
 /* style the errors in the form so they are visible */
 .mistake {

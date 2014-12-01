@@ -1,6 +1,11 @@
 <?php
 include 'include/top.php';
 include 'include/editNav.php';
+
+    $dbUserName = get_current_user() . '_admin';
+    $whichPass = "a"; //flag for which one to use.
+    $dbName = strtoupper(get_current_user()) . '_Shelter';
+    $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1 Initialize variables
@@ -107,10 +112,6 @@ if (isset($_POST["btnSubmit"])) {
 // SECTION: 2c Validation
     
     // Validation section.
-    $dbUserName = get_current_user() . '_admin';
-    $whichPass = "a"; //flag for which one to use.
-    $dbName = strtoupper(get_current_user()) . '_Shelter';
-    $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
     
     if ($firstName == "") {
         $errorMsg[] = "Please enter your first name";
@@ -226,7 +227,7 @@ if (isset($_POST["btnSubmit"])) {
             //Put forms information into a variable to print on the screen
             //
 
-            $messageA = '<h2>Welcome,'.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h2>';
+            $messageA = '<h2>Welcome, '.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h2>';
             $messageB = "<p>Click this link to confirm your registration: ";
             $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
             $messageB .= "<p>or copy and paste this url into a web browser: ";

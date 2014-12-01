@@ -43,11 +43,10 @@ $yourURL = $domain . $phpSelf;
 
 if (isset($_GET["id"])) {
     $pmkUserId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
-    $data[] = $pmkUserId;
     $query = 'SELECT fldFirstName, fldLastName, fldEmail, fldPassword ';
     $query .= 'FROM tblUsers WHERE pmkUserId = ?';
 
-    $results = $thisDatabase->select($query, $data);
+    $results = $thisDatabase->select($query, array($pmkUserId));
 
     $firstName = $results[0]["fldFirstName"];
     $lastName = $results[0]["fldLastName"];
@@ -67,7 +66,6 @@ $emailERROR = false;
 $passwordERROR = false;
 
 
-//%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
 //
@@ -77,7 +75,8 @@ $passwordERROR = false;
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2 Process for when the form is submitted
-//
+// 
+
 if (isset($_POST["btnSubmit"])) {
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -98,7 +97,7 @@ if (isset($_POST["btnSubmit"])) {
 // form. Note it is best to follow the same order as declared in section 1c.
     $pmkUserId = htmlentities($_POST["hidUserId"], ENT_QUOTES, "UTF-8");
     
-    if ($pmkShelterId > 0) {
+    if ($pmkUserId > 0) {
         $update = true;
     }
     // I am not putting the ID in the $data array at this time
@@ -193,6 +192,14 @@ if (isset($_POST["btnSubmit"])) {
         }
     } // end form is valid
 } // ends if form was submitted.
+//
+//
+//
+//
+
+    
+    
+  
 //#############################################################################
 //
 // SECTION 3 Display Form
@@ -209,15 +216,14 @@ if (isset($_POST["btnSubmit"])) {
 //
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
+    
     if ($dataEntered) { // closing of if marked with: end body submit
         print "<h1>Record Saved</h1> ";
-        print "User Id: " . $pmkUserId . "<br>";
         print "First Name: " . $firstName . "<br>";
         print "Last Name: " . $lastName . "<br>";
         print "Email: " . $email . "<br>";
         print "Password: " . $password. "<br>";
-
-    } else {
+    }else{
 //####################################
 //
 // SECTION 3b Error Messages
@@ -286,10 +292,13 @@ if (isset($_POST["btnSubmit"])) {
                 <fieldset class="buttons">
                     <legend></legend>
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Update Users" tabindex="900" class="button">
-                    <input type="reset" id="btnReset" name="btnReset" value="Reset" tabindex="900" class="button">
+                    
+                    <input type="reset" id="btnReset" name="btnReset" value="Reset" tabindex="901" class="button">
+                    
                 </fieldset> <!-- ends buttons -->
             </fieldset> <!-- Ends Wrapper -->
         </form>
+
         <?php
     } // end body submit
     ?>

@@ -1,5 +1,5 @@
 <header>
-<a href="https://jmagie.w3.uvm.edu/cs148/assignment10/index.php"><img src="images/logo.png" alt="Puppy LoVermont">
+    <a href="https://jmagie.w3.uvm.edu/cs148/assignment10/index.php"><img src="image/logo.png" alt="Puppy LoVermont"></a>
 </header>
 
 <nav>

@@ -22,7 +22,7 @@ if ($debug)
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 
 $adminEmail = "jmagie@uvm.edu";
-$message = "<p>I am sorry but this project cannot be confirmed at this time. Please call (802) 656-1234 for help in resolving this matter.</p>";
+$message = "<p>I am sorry but this project cannot be confirmed at this time. Please <a href='about-us.php'>contact us </a> for further assistance.</p>";
 
 
 //##############################################################
@@ -115,13 +115,16 @@ if (isset($_GET["q"])) {
         $bcc = "";
         $from = "PUPPY LOVERMONT <noreply@puppylovermont.com>";
         $subject = "PUPPY LOVERMONT REGISTRATION CONFIRMED";
-        $message = "<p>Thank you for taking the time to confirm your registration. You can now access the member page of the site by clicking the link below:";
-        $messageLink = '<a href="' . $domain . $path_parts["dirname"] . '/login.php' .'">Member Login</a></p>';
+        $message = "<p>Thank you for taking the time to confirm your registration.";
+        $messageA = "<h3>The following registration has been confirmed: </h3>";
+        $messageA .= "<p><b>First Name:</b><i>   " . $firstName . "</i></p>";
+        $messageA .= "<p><b>Last Name:</b><i>   " . $lastName . "</i></p>";
+        $messageA .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
+                
 
-        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message, $messageLink);
+        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message, $messageA);
 
         print $message;
-        print $messageLink;
         //header("Location: profile.php");
         if ($debug) {
             print "<p>";

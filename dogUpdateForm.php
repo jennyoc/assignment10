@@ -2,15 +2,15 @@
 include 'include/top.php';
 include 'include/editNav.php';
 
-    $dbUserName = get_current_user() . '_admin';
-    $whichPass = "a"; //flag for which one to use.
-    $dbName = strtoupper(get_current_user()) . '_Shelter';
-    $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
-    
+$dbUserName = get_current_user() . '_admin';
+$whichPass = "a"; //flag for which one to use.
+$dbName = strtoupper(get_current_user()) . '_Shelter';
+$thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
+
 $update = true;
-$debug= false;
+$debug = true;
+
 // SECTION: 1a.
-// $debug = true;
 if (isset($_GET["debug"])) { // ONLY do this in a classroom environment
     $debug = true;
 }
@@ -19,152 +19,164 @@ if ($debug)
 
 $errorMsg = array();
 $data = array();
+$datEntered = false;
 
 //SECTION: 1b Security
-$yourURL = $domain.$phpSelf;
+$yourURL = $domain . $phpSelf;
 
 //SECTION: 1c form variables
 if (isset($_GET["id"])) {
     $pmkDogId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
+    $data[] = $pmkDogId;
 
-    $query  = "SELECT fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldColor, fldGender, fldChildren, fldShelterName ";
-    $query .= "FROM tblDogs, tblShelters ";
-    $query .= "WHERE pmkDogId =? ";
-    $query .= "AND tblDogs.fnkShelterId = tblShelters.pmkShelterId";
+    $query = 'SELECT fnkShelterId, fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldColor, fldGender, fldChildren ';
+    $query .= 'FROM tblDogs WHERE pmkDogId = ? ';
 
+    $results = $thisDatabase->select($query, $data);
 
-    $results = $thisDatabase->select($query, array($pmkDogId));
-
+    $shelterId = $results[0]["fnkShelterId"];
     $dogName = $results[0]["fldDogName"];
     $breed = $results[0]["fldBreed"];
     $size = $results[0]["fldSize"];
+    $sizeId = $results[0]["fldSizeId"];
     $age = $results[0]["fldAge"];
     $stage = $results[0]["fldStage"];
     $coat = $results[0]["fldCoat"];
     $color = $results[0]["fldColor"];
     $gender = $results[0]["fldGender"];
+    $genderId = $results[0]["fldGenderId"];
     $children = $results[0]["fldChildren"];
-    $shelterName = $results[0]["fldShelterName"];
+    $childrenId = $results[0]["fldChildrenId"];
 
 //SECTION: 1d initialize error flags
-$dogNameERROR = false;
-$breedERROR = false;
-$sizeERROR = false;
-$ageERROR = false;
-$stageERROR = false;
-$coatERROR = false;
-$colorERROR = false;
-$genderERROR = false;
-$childrenERROR = false;
-$shelterNameERROR = false;
+    $shelterIdERROR = false;
+    $dogNameERROR = false;
+    $breedERROR = false;
+    $sizeERROR = false;
+    $ageERROR = false;
+    $stageERROR = false;
+    $coatERROR = false;
+    $colorERROR = false;
+    $genderERROR = false;
+    $childrenERROR = false;
 }
 
 //SECTION 2
-if(isset($_POST["btnSubmit"])) {
+if (isset($_POST["btnSubmit"])) {
 
 //SECTION: 2a security
-/*if(!securityCheck(true))  {
-     $msg = "<p>Sorry you cannot access this page. ";
-     $msg.= "Security breach detected and reported</p>";
-     die($msg);
-    }
-  */
- 
+    /* if(!securityCheck(true))  {
+      $msg = "<p>Sorry you cannot access this page. ";
+      $msg.= "Security breach detected and reported</p>";
+      die($msg);
+      }
+     */
+
 
 //SECTION: 2b sanitize data
+    $pmkDogId = htmlentities($_POST["hidDogId"], ENT_QUOTES, "UTF-8");
+
+    if ($pmkDogId > 0) {
+        $update = true;
+    }
+
+    $shelterId = htmlentities($_POST["lstShelterId"], ENT_QUOTES, "UTF-8");
+
     $dogName = htmlentities($_POST["txtDogName"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $dogName;
-    
+
     $breed = htmlentities($_POST["txtBreed"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $breed;
-    
+
     $size = htmlentities($_POST["lstSize"], ENT_QUOTES, "UTF-8");
     
     $age = htmlentities($_POST["txtAge"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $age;
-    
+
     $stage = htmlentities($_POST["lstStage"], ENT_QUOTES, "UTF-8");
-    
+
     $coat = htmlentities($_POST["lstCoat"], ENT_QUOTES, "UTF-8");
-    
+
     $color = htmlentities($_POST["txtColor"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $color;
+    $dataRecord[] = $color; 
     
     $gender = htmlentities($_POST["lstGender"], ENT_QUOTES, "UTF-8");
-    
+    $dataRecord[] = $gender;
+
     $children = htmlentities($_POST["lstChildren"], ENT_QUOTES, "UTF-8");
-    
-    $shelterName = htmlentities($_POST["lstShelterName"], ENT_QUOTES, "UTF-8");
-    
+    $dataRecord[] = $children;
+
+
     //SECTION: 2c validation
-    
+
+    if ($shelterId == "") {
+        $errorMsg[] = "Please select the shelter where this dog is located.";
+        $shelterIdERROR = true;
+    }
+
     if ($dogName == "") {
         $errorMsg[] = "Please enter the dog's name";
         $dogNameERROR = true;
     }
-    
+
     if ($age == "") {
         $ageERROR = false;
-    }elseif (!verifyAlphaNum($age)) {
+    } elseif (!verifyAlphaNum($age)) {
         $errorMsg[] = "The age appears to contain incorrect characters.";
         $ageERROR = true;
     }
-    
+
     if ($gender == "") {
         $errorMsg[] = "Please select the dog's gender.";
-        $colorERROR = true;
+        $genderERROR = true;
     }
 
-    if ($shelterName == "") {
-        $errorMsg[] = "Please select the shelter where this dog is located.";
-        $shelterNameERROR = true;
-    }
-    
+
+
 //SECTION: 2d process form - passed validation
     if (!$errorMsg) {
-        if ($debug){
+        if ($debug) {
             print "<p>Form is valid</p>";
         }
-    
-    //SECTION: 2e Save Data
-        
+
+        //SECTION: 2e Save Data
+
         $dataEntered = false;
-        try{
+        try {
             $thisDatabase->db->beginTransaction();
-            
-            $query = 'UPDATE tblDogs, tblShelters SET ';
-            $query .= 'tblDogs.fldDogName = ?, ';
-            $query .= 'tblDogs.fldBreed = ?, ';
-            $query .= 'tblDogs.fldSize = ?, ';
-            $query .= 'tblDogs.fldAge = ?, ';
-            $query .= 'tblDogs.fldStage = ?, ';
-            $query .= 'tblDogs.fldCoat = ?, ';
-            $query .= 'tblDogs.fldColor = ?, ';
-            $query .= 'tblDogs.fldGender = ?, ';
-            $query .= 'tblDogs.fldChildren = ?, ';
-            $query .= 'tblShelters.fldShelterName = ? ';
-            $query .= 'WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ';
-            $query .= 'AND tblDogs.pmkDogId = ? ';
+
+            $query = 'UPDATE tblDogs SET ';
+
+            $query .= 'fnkShelterId = ?, ';
+            $query .= 'fldDogName = ?, ';
+            $query .= 'fldBreed = ?, ';
+            $query .= 'fldSize = ?, ';
+            $query .= 'fldAge = ?, ';
+            $query .= 'fldStage = ?, ';
+            $query .= 'fldCoat = ?, ';
+            $query .= 'fldColor = ?, ';
+            $query .= 'fldGender = ?, ';
+            $query .= 'fldChildren = ? ';
+            $query .= 'WHERE pmkDogId = ? ';
             $data[] = $pmkDogId;
             print_r($data);
             $results = $thisDatabase->update($query, $data);
-            
+
             $dataEntered = $thisDatabase->db->commit();
-            
-            if($debug)
-                print "transaction complete.";                    
-        }catch (PDOException $e) {
+
+            if ($debug)
+                print "<p>transaction complete ";
+        } catch (PDOExecption $e) {
             $thisDatabase->db->rollback();
-            if($debug)
-                print "Error!: ".$e->getMessage(). "</br";
-                $errorMsg[] = "There was a problem accepting your data, please contact us directly."; 
-        }
+            if ($debug)
+                print "Error!: " . $e->getMessage() . "</br>";
+            $errorMsg[] = "There was a problem with accepting your data please contact us directly.";
+        }  
     }
 }
 //SECTION 3 Display Form
 ?>
 <article id="main">
-<?php
+    <?php
 //####################################
 //
 // SECTION 3a.
@@ -174,50 +186,82 @@ if(isset($_POST["btnSubmit"])) {
 //
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
-if ($dataEntered){ // closing of if marked with: end body submit
-    print "<h1>Record Saved</h1> ";
-    print $pmkDogId;
-    print $dogName;
-    print $breed;
-    print $size;
-    print $age;
-    print $stage;
-    print $coat;
-    print $color;
-    print $gender;
-    print $children;
-    print $shelterName;
-    print $fnkShelterId;
-} else {
+    if ($dataEntered) { // closing of if marked with: end body submit
+        print "<h1>Record Saved</h1> ";
+        print "Shelter Id: " . $shelterId . "<br>";
+        print "Name: " . $dogName . "<br>";
+        print "Breed: " . $breed . "<br>";
+        print "Size: " . $size . "<br>";
+        print "Age: " . $age . "<br>";
+        print "Stage: " . $stage . "<br>";
+        print "Coat: " . $coat . "<br>";
+        print "Color: " . $color . "<br>";
+        print "Gender: " . $gender . "<br>";
+        print "Children: " . $children . "<br>";
+    } else {
 //####################################
 //
 // SECTION 3b Error Messages
 //
 // display any error messages before we print out the form
-    if ($errorMsg) {
-        print '<div id="errors">';
-        print "<ol>\n";
-        foreach ($errorMsg as $err) {
-            print "<li>" . $err . "</li>\n";
+        if ($errorMsg) {
+            print '<div id="errors">';
+            print "<ol>\n";
+            foreach ($errorMsg as $err) {
+                print "<li>" . $err . "</li>\n";
+            }
+            print "</ol>\n";
+            print '</div>';
         }
-        print "</ol>\n";
-        print '</div>';
-    }
 //####################################
 //
 // SECTION 3c html Form
-    ?>
+        ?>
         <form action="<?php print $phpSelf; ?>"
               method="post"
               id="frmUpdate">
             <fieldset class="wrapper">
                 <legend>Update a current member profile.</legend>
                 <fieldset class="wrapperTwo">
-                    
+
                     <legend>Please complete the following form with the dogs information.<br> * denotes a required field.</legend>
-                        <input type="hidden" id="hidDogId" name="hidDogId"
-                       value="<?php print $pmkDogId; ?>"
-                       >
+                    <input type="hidden" id="hidDogId" name="hidDogId"
+                           value="<?php print $pmkDogId; ?>"
+                           >
+
+                    <?php
+                        $query = "SELECT DISTINCT fnkShelterId, fldShelterName ";
+                        $query .=" FROM tblDogs, tblShelters ";
+                        $query .="WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId";
+ 
+                        $shelterId = $thisDatabase->select($query);
+                        
+
+                        $output = array();
+                        $output[] = '<label for="lstShelterId" class="required">*Shelter Name: ';
+                        $output[] = '<select id="lstShelterId" ';
+                        $output[] = '        name="lstShelterId"';
+                        $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled">Select Shelter...</option>';
+                        
+
+
+                        foreach ($shelterId as $row) {
+
+                            $output[] = '<option ';
+                            if ($shelterId == $row["fnkShelterId"])
+                                $output[] = ' selected ';
+
+                            $output[] = 'value="' . $row["fnkShelterId"] . '">' . $row["fldShelterName"];
+
+                            $output[] = '</option>';
+                        }
+
+                        $output[] = '</select></label>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
+                    
                         <label for="txtDogName" class="required">*Dog Name
                             <input type="text" id="txtDogName" name="txtDogName"
                                    value="<?php print $dogName; ?>"
@@ -236,9 +280,11 @@ if ($dataEntered){ // closing of if marked with: end body submit
                         </label>
 
 
-                    <?php
+                    <?php                 
                         $query = "SELECT DISTINCT fldSize ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldSize IS NOT NULL ";
+                        $query .= "ORDER BY fldSizeId";
 
                         $size = $thisDatabase->select($query);
 
@@ -247,7 +293,7 @@ if ($dataEntered){ // closing of if marked with: end body submit
                         $output[] = '<select id="lstSize" ';
                         $output[] = '        name="lstSize"';
                         $output[] = '        tabindex="150" >';
-                        $output[] = '<option disabled="disabled" selected="selected">Size:</option>';
+                        $output[] = '<option disabled="disabled">Select dog size...</option>';
 
 
                         foreach ($size as $row) {
@@ -266,7 +312,7 @@ if ($dataEntered){ // closing of if marked with: end body submit
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
                         
-                         <label for="txtAge">Age
+                         <label for="txtAge" class="required">Age
                             <input type="text" id="txtAge" name="txtAge"
                                    value="<?php print $age; ?>"
                                    tabindex="120" maxlength="45" placeholder="Enter the dogs age"
@@ -277,15 +323,16 @@ if ($dataEntered){ // closing of if marked with: end body submit
                     <?php
                         $query = "SELECT DISTINCT fldStage ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldStage IS NOT NULL ";
 
                         $stage = $thisDatabase->select($query);
 
                         $output = array();
-                        $output[] = '<label for="lstStage">Stage: ';
+                        $output[] = '<label for="lstStage" class="required">Stage: ';
                         $output[] = '<select id="lstStage" ';
                         $output[] = '        name="lstStage"';
                         $output[] = '        tabindex="150" >';
-                        $output[] = '<option disabled="disabled" selected="selected">Stage:</option>';
+                        $output[] = '<option disabled="disabled">Select dog stage...</option>';
 
 
                         foreach ($stage as $row) {
@@ -307,21 +354,22 @@ if ($dataEntered){ // closing of if marked with: end body submit
                         <?php
                         $query = "SELECT DISTINCT fldCoat ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldCoat IS NOT NULL ";
 
                         $coat = $thisDatabase->select($query);
 
                         $output = array();
-                        $output[] = '<label for="lstCoat">Coat: ';
+                        $output[] = '<label for="lstCoat" class="required">Coat: ';
                         $output[] = '<select id="lstCoat" ';
                         $output[] = '        name="lstCoat"';
                         $output[] = '        tabindex="150" >';
-                        $output[] = '<option disabled="disabled" selected="selected">Coat:</option>';
+                        $output[] = '<option disabled="disabled">Select type of coat...</option>';
 
 
-                        foreach ($size as $row) {
+                        foreach ($coat as $row) {
 
                             $output[] = '<option ';
-                            if ($size == $row["fldCoat"])
+                            if ($coat == $row["fldCoat"])
                                 $output[] = ' selected ';
 
                             $output[] = 'value="' . $row["fldCoat"] . '">' . $row["fldCoat"];
@@ -333,6 +381,7 @@ if ($dataEntered){ // closing of if marked with: end body submit
 
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
+                   
                     
                     <label for="txtColor">Color
                             <input type="text" id="txtColor" name="txtColor"
@@ -343,7 +392,7 @@ if ($dataEntered){ // closing of if marked with: end body submit
                                    >
                         </label>
                     
-                        <?php
+                    <?php
                         $query = "SELECT DISTINCT fldGender ";
                         $query .= "FROM tblDogs ";
 
@@ -354,7 +403,7 @@ if ($dataEntered){ // closing of if marked with: end body submit
                         $output[] = '<select id="lstGender" ';
                         $output[] = '        name="lstGender"';
                         $output[] = '        tabindex="150" >';
-                        $output[] = '<option disabled="disabled" selected="selected">Gender:</option>';
+                        $output[] = '<option disabled="disabled">Select a gender:</option>';
 
 
                         foreach ($gender as $row) {
@@ -372,10 +421,11 @@ if ($dataEntered){ // closing of if marked with: end body submit
 
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
-                        
+                    
                         <?php
                         $query = "SELECT DISTINCT fldChildren ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldChildren IS NOT NULL ";
 
                         $children = $thisDatabase->select($query);
 
@@ -384,7 +434,7 @@ if ($dataEntered){ // closing of if marked with: end body submit
                         $output[] = '<select id="lstChildren" ';
                         $output[] = '        name="lstChildren"';
                         $output[] = '        tabindex="150" >';
-                        $output[] = '<option disabled="disabled" selected="selected">Not Applicable</option>';
+                        $output[] = '<option disabled="disabled">Not Applicable</option>';
 
                         
                         foreach ($children as $row) {
@@ -402,52 +452,21 @@ if ($dataEntered){ // closing of if marked with: end body submit
 
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
-                    
-                    <?php
-                        $query = "SELECT DISTINCT fldShelterName ";
-                        $query .= "FROM tblShelters ";
 
-                        $shelterName = $thisDatabase->select($query);
-
-                        $output = array();
-                        $output[] = '<label for="lstShelterName" class="required">*Shelter Name: ';
-                        $output[] = '<select id="lstShelterName" ';
-                        $output[] = '        name="lstShelterName"';
-                        $output[] = '        tabindex="150" >';
-                        $output[] = '<option disabled="disabled" selected="selected">Shelter Name:</option>';
+                </fieldset>
 
 
-                        foreach ($shelterName as $row) {
 
-                            $output[] = '<option ';
-                            if ($shelterName == $row["fldShelterName"])
-                                $output[] = ' selected ';
+            </fieldset> <!-- ends contact -->
+            <fieldset class="buttons">
+                <legend></legend>
+                <input type="submit" id="btnSubmit" name="btnSubmit" value="Update Dog" tabindex="900" class="button">
 
-                            $output[] = 'value="' . $row["fldShelterName"] . '">' . $row["fldShelterName"];
-
-                            $output[] = '</option>';
-                        }
-
-                        $output[] = '</select></label>';
-
-                        print join("\n", $output);  // this prints each line as a separate  line in html
-                        ?>
-                            
-                        
-                    </fieldset>
-                
-
-                
-                    </fieldset> <!-- ends contact -->
-                    <fieldset class="buttons">
-                        <legend></legend>
-                        <input type="submit" id="btnSubmit" name="btnSubmit" value="Update Dog" tabindex="900" class="button">
- 
-                    </fieldset> <!-- ends buttons -->
+            </fieldset> <!-- ends buttons -->
         </form>
-    <?php
-} // end body submit
-?>
+        <?php
+    } // end body submit
+    ?>
 </article>
 
 <?php
@@ -457,4 +476,3 @@ if ($debug)
 ?>
 </body>
 </html>
-    
