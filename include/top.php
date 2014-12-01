@@ -112,12 +112,12 @@
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
-        
+
         if ($path_parts['filename'] == "dogAddForm") {
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
-        
+
         if ($path_parts['filename'] == "dogList") {
             include "../bin/myDatabase.php";
         }
@@ -125,7 +125,18 @@
             include "lib/validation-functions.php";
             include "../bin/myDatabase.php";
         }
-        
+        if ($path_parts['filename'] == "dogDelete") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "shelterDelete") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
+        if ($path_parts['filename'] == "userDelete") {
+            include "lib/validation-functions.php";
+            include "../bin/myDatabase.php";
+        }
         ?>
 
     </head>

@@ -32,14 +32,13 @@ $url = "https://jocallag.w3.uvm.edu/cs148/assignment10/include/tblDogs.csv";
 
 
 // SECTION: 1c form variables
-$breed = " ";
+$breed = "";
 $size = "";
-$age = "";
-$coat = " ";
+$stage = "";
+$coat = "";
 $gender = "";
 $children = "";
 $data = array();
-$breedERROR = false;
 
 // SECTION: 1e misc variables
 //
@@ -47,7 +46,7 @@ $breedERROR = false;
 $errorMsg = array();
 
 // array used to hold form values that will be written to a CSV file
-$data = array();
+$dataRecord = array();
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -99,8 +98,17 @@ if (isset($_POST["btnSubmit"])) {
 
         $breed = htmlentities($_POST["lstBreed"], ENT_QUOTES, "UTF-8");
 
-        //size
-        // age
+        if (isset($_POST["chkSmall"])) {
+            $size = true;
+        } else {
+            $size = '';
+        }
+        $dataRecord[] = $size;
+
+
+
+        $stage = htmlentities($_POST["lstStage"], ENT_QUOTES, "UTF-8");
+
         $coat = htmlentities($_POST["lstCoat"], ENT_QUOTES, "UTF-8");
 
         $gender = htmlentities($_POST["radGender"], ENT_QUOTES, "UTF-8");
@@ -121,13 +129,13 @@ if (isset($_POST["btnSubmit"])) {
         }
 
         if ($size != "") {
-            $query .= " AND fldSize = ? ";
+            $query .= " AND fldSizeId = ? ";
             $data[] = $size;
         }
 
-        if ($age != "") {
+        if ($stage != "") {
             $query .= " AND fldStage = ? ";
-            $data[] = $age;
+            $data[] = $stage;
         }
 
         if ($coat != "") {
@@ -136,12 +144,12 @@ if (isset($_POST["btnSubmit"])) {
         }
 
         if ($gender != "") {
-            $query .= " AND fldGender = ? ";
+            $query .= " AND fldGenderId = ? ";
             $data[] = $gender;
         }
 
         if ($children != "") {
-            $query .= " AND fldChildren = ? ";
+            $query .= " AND fldChildrenId = ? ";
             $data[] = $children;
         }
 
@@ -201,16 +209,16 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
         <form action="search.php"
               method="post"
-              id="frmRegister">
+              id="frmSearch">
             <fieldset class="wrapper">
 
                 <fieldset class="wrapperTwo">
                     <fieldset class="search">
                         <!--Breed list box-->
                         <?php
-// Step Two: code can be in initialize variables or where step four needs to be
                         $query = "SELECT DISTINCT fldBreed ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldBreed IS NOT NULL ";
                         $query .= "ORDER BY fldBreed";
 
 
@@ -222,6 +230,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         $output[] = '<select id="lstBreed" ';
                         $output[] = '        name="lstBreed"';
                         $output[] = '        tabindex="300" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Select Breed</option>';
 
 
                         foreach ($breed as $row) {
@@ -237,15 +246,16 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                         $output[] = '</select></label>';
 
-                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        print join("\n", $output);
                         ?>
 
-                        <!--Size check boxes-->
+                        <!--Size check box-->
                         <?php
-                        $query = "SELECT DISTINCT fldSize   ";
+                        $query = "SELECT DISTINCT fldSize,fldSizeId  ";
                         $query .= "FROM tblDogs ";
-                        // $query .= "WHERE fldBreed = '?' ";
-                        $query .= "ORDER BY tblDogs.fldSize DESC ";
+                        $query .= "WHERE fldSize IS NOT NULL ";
+                        $query .= "ORDER BY tblDogs.fldSizeId  ASC ";
+
 
                         $size = $thisDatabase->select($query);
 
@@ -259,7 +269,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                             $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldSize"]) . '"><input type="checkbox" ';
                             $output[] = ' id="chk' . str_replace(" ", "-", $row["fldSize"]) . '" ';
                             $output[] = ' name="chk' . str_replace(" ", "-", $row["fldSize"]) . '" ';
-                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldSize"];
+                            $output[] = 'value="' . $row["fldSizeId"] . '">' . $row["fldSize"];
                             $output[] = '</label>';
                         }
 
@@ -267,30 +277,34 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
-
-                        <!--                        Age check boxes-->
+                        <!--                        Age list box-->
                         <?php
-                        $query = "SELECT DISTINCT fldStage  ";
+                        $query = "SELECT DISTINCT fldStage ";
                         $query .= "FROM tblDogs ";
-                        $query .= "ORDER BY fldStage ";
+                        $query .= "WHERE fldStage IS NOT NULL  ";
 
-                        $age = $thisDatabase->select($query);
+                        $stage = $thisDatabase->select($query);
 
                         $output = array();
-                        $output[] = '<fieldset class="checkbox">';
-                        $output[] = '<legend>Age:</legend>';
+                        $output[] = '<label for="lstStage">Age: ';
+                        $output[] = '<select id="lstStage" ';
+                        $output[] = '        name="lstStage"';
+                        $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Select Age</option>';
 
 
-                        foreach ($age as $row) {
+                        foreach ($stage as $row) {
 
-                            $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldStage"]) . '"><input type="checkbox" ';
-                            $output[] = ' id="chk' . str_replace(" ", "-", $row["fldStage"]) . '" ';
-                            $output[] = ' name="chk' . str_replace(" ", "-", $row["fldStage"]) . '" ';
-                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldStage"];
-                            $output[] = '</label>';
+                            $output[] = '<option ';
+                            if ($stage == $row["fldStage"])
+                                $output[] = ' selected ';
+
+                            $output[] = 'value="' . $row["fldStage"] . '">' . $row["fldStage"];
+
+                            $output[] = '</option>';
                         }
 
-                        $output[] = '</fieldset>';
+                        $output[] = '</select></label>';
 
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
@@ -299,6 +313,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         <?php
                         $query = "SELECT DISTINCT fldCoat ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldCoat IS NOT NULL  ";
                         $query .= "ORDER BY tblDogs.fldCoat  DESC ";
 
                         $coat = $thisDatabase->select($query);
@@ -308,6 +323,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         $output[] = '<select id="lstCoat" ';
                         $output[] = '        name="lstCoat"';
                         $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Select Coat</option>';
 
 
                         foreach ($coat as $row) {
@@ -329,8 +345,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                         <!--Gender radio buttons-->
                         <?php
-                        $query = "SELECT DISTINCT fldGender ";
+                        $query = "SELECT DISTINCT fldGender,fldGenderId ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldGender IS NOT NULL ";
+
 
                         $gender = $thisDatabase->select($query);
 
@@ -344,10 +362,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                             $output[] = ' id="rad' . str_replace(" ", "-", $row["fldGender"]) . '" ';
                             $output[] = ' name="radGender" ';
 
-                            if ($gender == $row["pmkDogId"])
+                            if ($gender == $row["fldGenderId"])
                                 $output[] = " checked ";
 
-                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldGender"];
+                            $output[] = 'value="' . $row["fldGenderId"] . '">' . $row["fldGender"];
                             $output[] = '</label>';
                         }
 
@@ -358,8 +376,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                         <!-- Children -->
                         <?php
-                        $query = "SELECT DISTINCT fldChildren ";
+                        $query = "SELECT DISTINCT fldChildren,fldChildrenId ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldChildren IS NOT NULL  ";
+
 
                         $children = $thisDatabase->select($query);
 
@@ -373,10 +393,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                             $output[] = ' id="rad' . str_replace(" ", "-", $row["fldChildren"]) . '" ';
                             $output[] = ' name="radChildren" ';
 
-                            if ($gender == $row["pmkDogId"])
+                            if ($gender == $row["fldChildrenId"])
                                 $output[] = " checked ";
 
-                            $output[] = 'value="' . $row["pmkDogId"] . '">' . $row["fldChildren"];
+                            $output[] = 'value="' . $row["fldChildrenId"] . '">' . $row["fldChildren"];
                             $output[] = '</label>';
                         }
 
@@ -397,9 +417,6 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
             </fieldset> <!-- Ends Wrapper -->
         </form>
-            <?php
-include 'viewAllDogs.php';
-?>
     </article>
 
     <article class="aside">

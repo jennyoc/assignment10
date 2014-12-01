@@ -30,6 +30,13 @@ h2{
     text-align: center;
 }
 
+h3{
+        margin-left: auto;
+    margin-right: auto;
+    /* padding-left: 3em; */
+    text-align: center;
+}
+
 h4{
     text-decoration: underline;
     font-weight: bold;
@@ -40,7 +47,6 @@ h4{
     width: 93.75%; /* 900px / 960px */
 }
 #main{
-    float: left;
     width: 62.8888889%; /* 566px / 900px */
 }
 
@@ -87,7 +93,19 @@ li{
 
 a{
     text-decoration: none;
+    color: green;
+    font-weight: bolder;
+        
 }
+
+a:visited{
+    color: forestgreen;
+}
+
+nav#editNav{
+    font-size: small;
+}
+
 /********** - - **********/
 article h1, article p, article table{
     padding: .2em 8.48056537% .2em 8.48056537%; /* 48px / 566px */
@@ -125,7 +143,7 @@ img.ru {float: right;}
     text-align: right;
     list-style-type: none;
     float: right;
-    margin-right: 10%;
+    margin-right: 22%;
 }
 
 .mypic {
@@ -195,6 +213,9 @@ footer{
 form#frmRegister{
     margin-left: 15em;
 }
+form#frmSearch{
+    float:left;
+}
 
 /* need to clear any floats that may exist */
 fieldset{
@@ -221,7 +242,7 @@ fieldset.search{
 }
 fieldset.buttons{
     border:none;
-    margin-left: 9em;
+    margin-left: 5em;
 }
 
 /* when you look at the labels this pushes then next to the input and right
@@ -239,61 +260,72 @@ fieldset.search label{
 fieldset.search input, fieldset.search select{
     width: 25em; /* works with above to be the same size for the boxes */
 }
-input#btnSubmit{
+#btnSubmit{
     position: relative;
     vertical-align: top;
-    /*    margin-left: 8em; */
-    width: 60%;
-    height: 35px;
-    padding: 0;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(black, .25);
-    background: #f0776c;
-    border: 0;
-    border-bottom: 2px solid #d76b60;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: inset 0 -2px #d76b60;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background-color:#f9f9f9;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    cursor:pointer;
+    color:#666666;
+    font-family:arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ffffff;
 }
 
-input#btnReset{
-    position: relative;
-    vertical-align: top;
-    /*    margin-left: 8em; */
-    width: 20%;
-    height: 35px;
-    padding: 0;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(black, .25);
-    background: #f0776c;
-    border: 0;
-    border-bottom: 2px solid #d76b60;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: inset 0 -2px #d76b60;
+#btnSubmit:hover{
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;
+
 }
 
-input#btnDelete{
+#btnReset{
     position: relative;
     vertical-align: top;
-    /*    margin-left: 8em; */
-    width: 40%;
-    height: 35px;
-    padding: 0;
-    font-size: 20px;
-    color: white;
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(black, .25);
-    background: #f0776c;
-    border: 0;
-    border-bottom: 2px solid #d76b60;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: inset 0 -2px #d76b60;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background-color:#f9f9f9;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    cursor:pointer;
+    color:#666666;
+    font-family:arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ffffff;
+}
+#btnReset:hover{
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;    
+}
+
+#btnDelete{
+    position: relative;
+    vertical-align: top;
+    box-shadow:inset 0px 1px 0px 0px #ffffff;
+    background-color:#f9f9f9;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    cursor:pointer;
+    color:#666666;
+    font-family:arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ffffff;
+}
+#btnDelete:hover{
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;
 }
 
 label {
@@ -362,4 +394,30 @@ article {
 
 html {
     background-color: #CEF6C6;
+}
+
+/********** Locations Page **********/
+section#allBreed{
+    position:absolute;
+    margin-left: 10em;
+}
+
+section#rutlandCounty{
+    position:absolute;
+    margin-left: 10em;
+}
+
+section#chittendenCounty{
+    position:absolute;
+    margin-left: 10em;
+}
+
+section#franklinCounty{
+    position:absolute;
+    margin-left: 10em;
+}
+
+section#centralVermont{
+    position:absolute;
+    margin-left: 10em;
 }

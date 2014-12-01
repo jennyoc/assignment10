@@ -30,8 +30,6 @@ $yourURL = $domain . $phpSelf;
 $firstName = "";
 $lastName = "";
 $email = "";
-$password = "";
-$password2 = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -39,8 +37,6 @@ $password2 = "";
 $firstNameERROR = false;
 $lastNameERROR = false;
 $emailERROR = false;
-$passwordERROR = false;
-$password2ERROR = false;
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -85,15 +81,6 @@ if (isset($_POST["btnSubmit"])) {
     $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);
     $dataRecord[] = $email;
     
-    $password = htmlentities($_POST["txtPassword"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $password;
-    
-    $password2 = htmlentities($_POST["txtPassword2"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $password2;
-    
-    
-
-    
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -131,18 +118,6 @@ if (isset($_POST["btnSubmit"])) {
     $emailERROR = true;
     $errorMsg[] = "There is already a user with that email";
     }
-    if ($password == "") {
-        $errorMsg[] = "Please enter a password";
-        $passwordERROR = true;
-    } elseif (!verifyAlphaNum($password)) {
-        $errorMsg[] = "Your password appears to contain incorrect characters";
-        $passwordERROR = true;
-    }
-    if ($password != $password2){
-        $errorMsg[] = "Your passwords do not match.";
-        $password2Error = true;        
-    }
-
 
     
     
@@ -167,8 +142,8 @@ if (isset($_POST["btnSubmit"])) {
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = 'INSERT INTO tblUsers(fldfirstName, fldLastName, fldEmail, fldPassword) VALUES (?,?,?,?)';
-            $data = array($firstName,$lastName, $email, md5($password)); //md5($password) creates an encryption of the                     password to be displayed in the database - this is done for security reasons.
+            $query = 'INSERT INTO tblUsers(fldfirstName, fldLastName, fldEmail) VALUES (?,?,?)';
+            $data = array($firstName,$lastName, $email); //md5($password) creates an encryption of the                     password to be displayed in the database - this is done for security reasons.
             if ($debug) {
                 print "<p>sql " . $query;
                 print"<p><pre>";
@@ -220,14 +195,12 @@ if (isset($_POST["btnSubmit"])) {
             //Put forms information into a variable to print on the screen
             //
 
-            $messageA = '<h2>Welcome,'.$firstName.'! Thank you for registering to become a member of Puppy Lovermont,</h2>';
+            $messageA = '<h2>Welcome, '.$firstName.'! Thank you for registering to become a member of Puppy Lovermont.</h2>';
             $messageB = "<p>Click this link to confirm your registration: ";
             $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
             $messageB .= "<p>or copy and paste this url into a web browser: ";
             $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
-            $messageC = '<p>Make sure you remember your login email and password so you can access the member section of the website.</p>';
             $messageC .= "<p><b>Email:</b><i>   " . $email . "</i></p>";
-            $messageC .= "<p><b>Password:</b><i>   " . $password . "</i></p>";
             $messageD = "<p>You will receive an email shortly with a link to confirm your membership.</p>";        
             //##############################################################
             //
@@ -252,6 +225,9 @@ if (isset($_POST["btnSubmit"])) {
 <!-- ######################     Article Section   ############################## -->
 <article id="main">
     <h2>Become a member today!</h2>
+    <h3>You will receive e-mails when new dogs and shelters are entered into the system </h3>
+    <h3>Please complete the following form with your contact information</h3>
+    
     <?php
 //####################################
 //
@@ -299,7 +275,6 @@ if (isset($_POST["btnSubmit"])) {
               method="post"
               id="frmRegister">
             <fieldset class="wrapper">
-                    <legend>Please complete the following form with your contact information</legend>
                 <fieldset class="wrapperTwo">
                     <fieldset class="contact">
 
@@ -331,22 +306,6 @@ if (isset($_POST["btnSubmit"])) {
                                    value="<?php print $email; ?>"
                                    tabindex="120" maxlength="50" placeholder="Enter a valid email"
                                    <?php if ($emailERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   >
-                        </label>
-                         <label for="txtPassword" class="required">Password
-                            <input type="password" id="txtPassword" name="txtPassword"
-                                   value=""
-                                   tabindex="120" maxlength="45" placeholder="Create a password"
-                                   <?php if ($passwordERROR) print 'class="mistake"'; ?>
-                                   onfocus="this.select()"
-                                   >
-                        </label>
-                        <label for="txtPassword2" class="required">Confirm Password
-                            <input type="password" id="txtPassword2" name="txtPassword2"
-                                   value=""
-                                   tabindex="120" maxlength="45" placeholder="Create a password"
-                                   <?php if ($password2ERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >
                         </label>

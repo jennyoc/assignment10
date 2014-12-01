@@ -17,11 +17,12 @@ $dbUserName = get_current_user() . '_admin';
     $dbName = strtoupper(get_current_user()) . '_Final_Project';
     $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
     
+    
 // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 // prepare the sql statement
 $orderBy = "ORDER BY fldLastName";
 
-$query  = "SELECT pmkUserId, fldFirstName, fldLastName, fldEmail, fldPassword, fldConfirmed ";
+$query  = "SELECT pmkUserId AS Admin, fldFirstName AS FirstName, fldLastName AS LastName, fldEmail AS Email ";
 $query .= "FROM tblUsers ";
 $query .= "WHERE fldConfirmed = 0";
 
@@ -39,14 +40,25 @@ if ($debug) {
 // print out the results
 print '<section id="listOfUsers">';
 print "<table>\n";
-
+$firstTime = true;
 foreach ($users as $user) {
+    print "<tr>";
+    if ($firstTime) {
+    $keys = array_keys($user);
+    foreach ($keys as $key) {
+                if (!is_int($key)) {
+                    print "<th>" . $key . "</th>";
+                }
+            }
+    print "</tr>"; 
+    $firstTime = false;
+    }
    
     print "<tr>";
     if ($admin) {
-        print '<td><a href="userUpdateForm.php?id=' . $user["pmkUserId"] . '">[Edit]</a></td> ';
+        print '<td><a href="userUpdateForm.php?id=' . $user["Admin"] . '">[Edit]</a>            <a href="userDelete.php?id=' . $user["Admin"] . '">[Delete]</a></td> ';
     }
-    print "<td>".$user['fldFirstName'] . "</td><td>   " . $user['fldLastName'] . "  </td><td>" . $user['fldEmail'] . "</td><td>  " . $user['fldPassword'] . "</td></tr>\n";
+    print "<td>".$user['FirstName'] . "</td><td>   " . $user['LastName'] . "  </td><td>" . $user['Email'] . "</td></tr>\n";
 }
 print "</table>\n";
 print '</section>';
@@ -55,6 +67,7 @@ include "include/footer.php";
 ?>
 </body>
 </html>
+
 
 
 

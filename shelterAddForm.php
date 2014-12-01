@@ -31,7 +31,6 @@ $yourURL = $domain . $phpSelf;
 $shelterName = "";
 $address = "";
 $city = "";
-$state = "";
 $zip = "";
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -43,7 +42,6 @@ $zip = "";
 $shelterNameERROR = false;
 $addressERROR = false;
 $cityERROR = false;
-$stateERROR = false;
 $zipERROR = false;
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -85,9 +83,6 @@ if (isset($_POST["btnSubmit"])) {
     $city = htmlentities($_POST["txtCity"], ENT_QUOTES, "UTF-8");
     $data[] = $city;
 
-    $state = htmlentities($_POST["txtState"], ENT_QUOTES, "UTF-8");
-    $data[] = $state;
-
     $zip = (int) htmlentities($_POST["txtZip"], ENT_QUOTES, "UTF-8");
     $data[] = $zip;
     
@@ -120,14 +115,6 @@ if (isset($_POST["btnSubmit"])) {
     } elseif (!verifyAlphaNum($city)) {
         $errorMsg[] = "The city appears to have extra character.";
         $cityERROR = true;
-    }
-
-    if ($state == "") {
-        $errorMsg[] = "Please enter a new state";
-        $stateERROR = true;
-    } elseif (!verifyAlphaNum($state)) {
-        $errorMsg[] = "The state appears to have extra character.";
-        $state = true;
     }
 
     if ($zip == "") {
@@ -171,7 +158,6 @@ if (isset($_POST["btnSubmit"])) {
             $query .= 'fldShelterName = ?, ';
             $query .= 'fldAddress = ?, ';
             $query .= 'fldCity = ?, ';
-            $query .= 'fldState = ?, ';
             $query .= 'fldZip = ?, ';
             $query .= 'fldPhone = ? ';
 
@@ -223,7 +209,6 @@ if ($dataEntered) { // closing of if marked with: end body submit
         print "Shelter Name: " . $shelterName . "<br>";
         print "Address: " . $address . "<br>";
         print "City: " . $city . "<br>";
-        print "State: " . $state . "<br>";
         print "Zip: " . $zip . "<br>";
         print "Phone: " . $phone . "<br>";
     } else {
@@ -291,14 +276,6 @@ if ($dataEntered) { // closing of if marked with: end body submit
                            >
                 </label>   
 
-                <label for="txtState" class="required">State:
-                    <input type="text" id="txtState" name="txtState"
-                           value="<?php print $state; ?>"
-                           tabindex="100" maxlength="45" placeholder="Enter state"
-                           <?php if ($stateERROR) print 'class="mistake"'; ?>
-                           onfocus="this.select()"
-                           >
-                </label>   
 
                 <label for="txtZip" class="required">Zip Code:
                     <input type="text" id="txtZip" name="txtZip"

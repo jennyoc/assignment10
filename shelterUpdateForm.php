@@ -44,7 +44,7 @@ $yourURL = $domain . $phpSelf;
 if (isset($_GET["id"])) {
     $pmkShelterId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
     $data[] = $pmkShelterId;
-    $query = 'SELECT fldShelterName, fldAddress, fldCity, fldState, fldZip, fldPhone ';
+    $query = 'SELECT fldShelterName, fldAddress, fldCity, fldZip, fldPhone ';
     $query .= 'FROM tblShelters WHERE pmkShelterId = ?';
 
     $results = $thisDatabase->select($query, $data);
@@ -52,7 +52,6 @@ if (isset($_GET["id"])) {
     $shelterName = $results[0]["fldShelterName"];
     $address = $results[0]["fldAddress"];
     $city = $results[0]["fldCity"];
-    $state = $results[0]["fldState"];
     $zip = $results[0]["fldZip"];
     $phone = $results[0]["fldPhone"];
 }
@@ -66,7 +65,6 @@ if (isset($_GET["id"])) {
 $shelterNameERROR = false;
 $addressERROR = false;
 $cityERROR = false;
-$stateERROR = false;
 $zipERROR = false;
 $phoneERROR = false;
 
@@ -115,9 +113,6 @@ if (isset($_POST["btnSubmit"])) {
     $city = htmlentities($_POST["txtCity"], ENT_QUOTES, "UTF-8");
     $data[] = $city;
 
-    $state = htmlentities($_POST["txtState"], ENT_QUOTES, "UTF-8");
-    $data[] = $state;
-
     $zip = (int) htmlentities($_POST["txtZip"], ENT_QUOTES, "UTF-8");
     $data[] = $zip;
     
@@ -142,18 +137,15 @@ if (isset($_POST["btnSubmit"])) {
       }
     
 
-    if ($city == "") {
+    /*if ($city == "") {
         $errorMsg[] = "Please enter a new city";
         $city = true;
     } elseif (!verifyAlphaNum($city)) {
         $errorMsg[] = "The city appears to have extra character.";
         $cityERROR = true;
     }
-
-    if ($state == "") {
-        $errorMsg[] = "Please enter a state like: 'VT'";
-        $stateERROR = true;
-    }
+     * 
+     */
 
     if ($zip == "") {
         $errorMsg[] = "Please enter a new zip code";
@@ -198,7 +190,6 @@ if (isset($_POST["btnSubmit"])) {
                 $query .= 'fldShelterName = ?, ';
                 $query .= 'fldAddress = ?, ';
                 $query .= 'fldCity = ?, ';
-                $query .= 'fldState = ?, ';
                 $query .= 'fldZip = ?, ';
                 $query .= 'fldPhone = ? ';
 
@@ -241,7 +232,6 @@ if (isset($_POST["btnSubmit"])) {
         print "Shelter Name: " . $shelterName . "<br>";
         print "Address: " . $address . "<br>";
         print "City: " . $city . "<br>";
-        print "State: " . $state . "<br>";
         print "Zip: " . $zip . "<br>";
         print "Phone: " . $phone . "<br>";
     } else {
@@ -310,16 +300,7 @@ if (isset($_POST["btnSubmit"])) {
                            <?php if ($cityERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
                            >
-                </label>   
-
-                <label for="txtState" class="required">State:
-                    <input type="text" id="txtState" name="txtState"
-                           value="<?php print $state; ?>"
-                           tabindex="100" maxlength="45" placeholder="Enter state"
-                           <?php if ($stateERROR) print 'class="mistake"'; ?>
-                           onfocus="this.select()"
-                           >
-                </label>   
+                </label>    
 
                 <label for="txtZip" class="required">Zip Code:
                     <input type="text" id="txtZip" name="txtZip"

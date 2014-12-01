@@ -12,8 +12,8 @@ include 'include/top.php';
 
 
 </article>
-</body>
     <?php 
         include 'include/footer.php';
     ?>
+</body>
 </html>

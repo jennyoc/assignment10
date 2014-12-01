@@ -44,7 +44,7 @@ $yourURL = $domain . $phpSelf;
 if (isset($_GET["id"])) {
     $pmkUserId = htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
     $data[] = $pmkUserId;
-    $query = 'SELECT fldFirstName, fldLastName, fldEmail, fldPassword ';
+    $query = 'SELECT fldFirstName, fldLastName, fldEmail ';
     $query .= 'FROM tblUsers WHERE pmkUserId = ?';
 
     $results = $thisDatabase->select($query, $data);
@@ -52,7 +52,6 @@ if (isset($_GET["id"])) {
     $firstName = $results[0]["fldFirstName"];
     $lastName = $results[0]["fldLastName"];
     $email = $results[0]["fldEmail"];
-    $password = $results[0]["fldPassword"];
 }
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -64,7 +63,6 @@ if (isset($_GET["id"])) {
 $firstNameERROR = false;
 $lastNameERROR = false;
 $emailERROR = false;
-$passwordERROR = false;
 
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -112,11 +110,6 @@ if (isset($_POST["btnSubmit"])) {
     $email = htmlentities($_POST["txtEmail"], ENT_QUOTES, "UTF-8");
     $data[] = $email;
 
-    $password = htmlentities($_POST["txtPassword"], ENT_QUOTES, "UTF-8");
-    $data[] = $password;
-
-
-
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2c Validation
@@ -140,11 +133,6 @@ if (isset($_POST["btnSubmit"])) {
     } elseif (!verifyEmail($email)) {
         $errorMsg[] = "The email appears to contain invalid characters";
         $emailERROR = true;
-    }
-
-    if ($password == "") {
-        $errorMsg[] = "Please enter the password";
-        $passwordERROR = true;
     }
 
 
@@ -173,8 +161,7 @@ if (isset($_POST["btnSubmit"])) {
 
                 $query .= 'fldFirstName = ?, ';
                 $query .= 'fldLastName = ?, ';
-                $query .= 'fldEmail = ?, ';
-                $query .= 'fldPassword = ? ';
+                $query .= 'fldEmail = ? ';
 
                 $query .= 'WHERE pmkUserId = ?';
                 $data[] = $pmkUserId;
@@ -215,7 +202,6 @@ if (isset($_POST["btnSubmit"])) {
         print "First Name: " . $firstName . "<br>";
         print "Last Name: " . $lastName . "<br>";
         print "Email: " . $email . "<br>";
-        print "Password: " . $password. "<br>";
 
     } else {
 //####################################
@@ -275,14 +261,6 @@ if (isset($_POST["btnSubmit"])) {
                            >
                 </label>   
 
-                <label for="txtPassword" class="required">Password:
-                    <input type="password" id="txtPassword" name="txtPassword"
-                           value="<?php print $password; ?>"
-                           tabindex="100" maxlength="45" placeholder="Enter zip code"
-                           <?php if ($passwordERROR) print 'class="mistake"'; ?>
-                           onfocus="this.select()"
-                           >
-                </label> 
                 <fieldset class="buttons">
                     <legend></legend>
                     <input type="submit" id="btnSubmit" name="btnSubmit" value="Update Users" tabindex="900" class="button">

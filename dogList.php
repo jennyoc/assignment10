@@ -35,9 +35,10 @@ $dbUserName = get_current_user() . '_admin';
 // prepare the sql statement
 $orderBy = "ORDER BY fldDogName";
 
-$query  = "SELECT pmkDogId, fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldColor, fldGender, fldChildren, fldShelterName ";
+$query  = "SELECT tblDogs.pmkDogId AS Admin, tblDogs.fldDogName AS Name, tblDogs.fldBreed AS Breed, tblDogs.fldSize AS Size, tblDogs.fldAge AS Age, tblDogs.fldStage AS Stage, tblDogs.fldCoat AS Coat, tblDogs.fldColor AS Coloring, tblDogs.fldGender AS Gender, tblDogs.fldChildren AS Children, tblShelters.fldShelterName AS Shelter ";
 $query .= "FROM tblDogs, tblShelters ";
 $query .= "WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ";
+$query .= "ORDER BY fldDogName";
 
 if ($debug)
     print "<p>sql " . $query;
@@ -53,14 +54,24 @@ if ($debug) {
 // print out the results
 print '<section id="listOfDogs">';
 print "<table>\n";
-
+$firstTime = true;
 foreach ($dogs as $dog) {
-   
+    print "<tr>";
+    if ($firstTime) {
+    $keys = array_keys($dog);
+    foreach ($keys as $key) {
+                if (!is_int($key)) {
+                    print "<th>" . $key . "</th>";
+                }
+            }
+    print "</tr>"; 
+    $firstTime = false;
+ }        
     print "<tr>";
     if ($admin) {
-        print '<td><a href="dogUpdateForm.php?id=' . $dog["pmkDogId"] . '">[Edit]</a></td> ';
+        print '<td><a href="dogUpdateForm.php?id=' . $dog["Admin"] . '">[Edit]</a><a href="dogDelete.php?id=' . $dog["Admin"] . '">[Delete]</a></td> ';
     }
-    print "<td>".$dog['fldDogName'] . "</td><td>   " . $dog['fldBreed'] . "  </td><td>" . $dog['fldSize'] . "</td><td>  " . $dog['fldAge'] . "</td><td>".$dog['fldCoat'] . "</td><td>".$dog['fldColor'] . "</td><td>".$dog['fldGender'] . "</td><td>".$dog['fldChildren'] . "</td><td>".$dog['fldShelterName'] . "</td></tr>\n";
+    print "<td>".$dog['Name'] . "</td><td>   " . $dog['Breed'] . "  </td><td>" . $dog['Size'] . "</td><td>  " . $dog['Age'] . "</td><td>  " . $dog['Stage'] . "</td><td>".$dog['Coat'] . "</td><td>".$dog['Coloring'] . "</td><td>".$dog['Gender'] . "</td><td>".$dog['Children'] . "</td><td>".$dog['Shelter'] . "</td></tr>\n";
 }
 print "</table>\n";
 print '</section>';
@@ -69,8 +80,3 @@ include "include/footer.php";
 ?>
 </body>
 </html>
-
-
-
-
-
