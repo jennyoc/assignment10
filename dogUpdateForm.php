@@ -81,6 +81,7 @@ if (isset($_POST["btnSubmit"])) {
     }
 
     $shelterId = htmlentities($_POST["lstShelterId"], ENT_QUOTES, "UTF-8");
+
     $dogName = htmlentities($_POST["txtDogName"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $dogName;
 
@@ -231,7 +232,7 @@ if (isset($_POST["btnSubmit"])) {
                     <?php
                         $query = "SELECT DISTINCT fnkShelterId, fldShelterName ";
                         $query .=" FROM tblDogs, tblShelters ";
-                        $query .="WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId ";
+                        $query .="WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId";
  
                         $shelterId = $thisDatabase->select($query);
                         
@@ -264,7 +265,7 @@ if (isset($_POST["btnSubmit"])) {
                         <label for="txtDogName" class="required">*Dog Name
                             <input type="text" id="txtDogName" name="txtDogName"
                                    value="<?php print $dogName; ?>"
-                                   tabindex="120" maxlength="45" placeholder="Ex: Murphey"
+                                   tabindex="120" maxlength="45" placeholder="Ex: <i>Murphey</i>"
                                    <?php if ($dogNameERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >
@@ -272,7 +273,7 @@ if (isset($_POST["btnSubmit"])) {
                         <label for="txtBreed">Breed Name
                             <input type="text" id="txtBreed" name="txtBreed"
                                    value="<?php print $breed; ?>"
-                                   tabindex="120" maxlength="45" placeholder="Ex: Bulldog"
+                                   tabindex="120" maxlength="45" placeholder="Ex: <i>Bulldog</i>"
                                    <?php if ($breedERROR) print 'class="mistake"'; ?>
                                    onfocus="this.select()"
                                    >
@@ -280,7 +281,7 @@ if (isset($_POST["btnSubmit"])) {
 
 
                     <?php                 
-                        $query = "SELECT DISTINCT fldSize,fldSizeId ";
+                        $query = "SELECT DISTINCT fldSize ";
                         $query .= "FROM tblDogs ";
                         $query .= "WHERE fldSize IS NOT NULL ";
                         $query .= "ORDER BY fldSizeId";
@@ -301,7 +302,7 @@ if (isset($_POST["btnSubmit"])) {
                             if ($size == $row["fldSize"])
                                 $output[] = ' selected ';
 
-                            $output[] = 'value="' . $row["fldSizeId"] . '">' . $row["fldSize"];
+                            $output[] = 'value="' . $row["fldSize"] . '">' . $row["fldSize"];
 
                             $output[] = '</option>';
                         }
@@ -392,7 +393,7 @@ if (isset($_POST["btnSubmit"])) {
                         </label>
                     
                     <?php
-                        $query = "SELECT DISTINCT fldGender,fldGenderId ";
+                        $query = "SELECT DISTINCT fldGender ";
                         $query .= "FROM tblDogs ";
 
                         $gender = $thisDatabase->select($query);
@@ -411,7 +412,7 @@ if (isset($_POST["btnSubmit"])) {
                             if ($gender == $row["fldGender"])
                                 $output[] = ' selected ';
 
-                            $output[] = 'value="' . $row["fldGenderId"] . '">' . $row["fldGender"];
+                            $output[] = 'value="' . $row["fldGender"] . '">' . $row["fldGender"];
 
                             $output[] = '</option>';
                         }

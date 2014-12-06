@@ -41,7 +41,7 @@ print '<section id="listOfShelters">';
 print "<table>\n";
 $firstTime = true;
 foreach ($shelters as $shelter) {
-    print "<tr>";
+    /*print "<tr>";
     if ($firstTime) {
     $keys = array_keys($shelter);
     foreach ($keys as $key) {
@@ -52,6 +52,8 @@ foreach ($shelters as $shelter) {
     print "</tr>"; 
     $firstTime = false;
     }
+     * 
+     */
    
     print "<tr>";
     if ($admin) {

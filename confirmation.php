@@ -42,7 +42,7 @@ if (isset($_GET["q"])) {
 //validation functions
     $dbUserName = get_current_user() . '_admin';
     $whichPass = "a"; //flag for which one to use.
-    $dbName = strtoupper(get_current_user()) . '_Shelter';
+    $dbName = strtoupper(get_current_user()) . '_Final_Project';
     $thisDatabase = new myDatabase($dbUserName, $whichPass, $dbName);
     
     
@@ -115,10 +115,9 @@ if (isset($_GET["q"])) {
         $bcc = "";
         $from = "PUPPY LOVERMONT <noreply@puppylovermont.com>";
         $subject = "PUPPY LOVERMONT REGISTRATION CONFIRMED";
-        $message = "<p>Thank you for taking the time to confirm your registration. You can now access the member page of the site by clicking the link below:";
-        $messageLink = '<a href="' . $domain . $path_parts["dirname"] . '/login.php' .'">Member Login</a></p>';
+        $message = "<p>Thank you for taking the time to confirm your registration.";
 
-        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message, $messageLink);
+        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
 
         print $message;
         print $messageLink;

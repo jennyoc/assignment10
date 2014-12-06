@@ -250,7 +250,6 @@ if (isset($_POST["btnSubmit"])) {
         }
         print "been sent</p>";
         print "<p>To: " . $email . "</p>";
-        print "<p>Mail Message:</p>";
         print $messageA . $messageC . $messageD;
     } else {
 //####################################

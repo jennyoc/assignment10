@@ -56,7 +56,7 @@ print '<section id="listOfDogs">';
 print "<table>\n";
 $firstTime = true;
 foreach ($dogs as $dog) {
-    print "<tr>";
+    /*print "<tr>";
     if ($firstTime) {
     $keys = array_keys($dog);
     foreach ($keys as $key) {
@@ -66,7 +66,9 @@ foreach ($dogs as $dog) {
             }
     print "</tr>"; 
     $firstTime = false;
- }        
+ }   
+     * 
+     */     
     print "<tr>";
     if ($admin) {
         print '<td><a href="dogUpdateForm.php?id=' . $dog["Admin"] . '">[Edit]</a><a href="dogDelete.php?id=' . $dog["Admin"] . '">[Delete]</a></td> ';

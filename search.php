@@ -100,7 +100,7 @@ if (isset($_POST["btnSubmit"])) {
 
         if (isset($_POST["chkSmall"])) {
             $size = true;
-        } else {
+        } elseif (isset($_POST["chkMedium"])) {
             $size = '';
         }
         $dataRecord[] = $size;
@@ -420,19 +420,19 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
     </article>
 
     <article class="aside">
-        <h4>Age (Years)</h4>
-        <h5>
-            Puppy: 0-2<br><br>
-            Adult: 3-5<br><br>
-            Senior: 6-9<br><br>
-            Geriatric: 10+ 
-        </h5>
         <h4>Size (Pounds)</h4>
         <h5>
             Small: Under 25<br><br>
             Medium: 26-40<br><br>
             Large: 41-70<br><br>
             XL: 70+
+        </h5>
+        <h4>Age (Years)</h4>
+        <h5>
+            Puppy: 0-2<br><br>
+            Adult: 3-5<br><br>
+            Senior: 6-9<br><br>
+            Geriatric: 10+ 
         </h5>
     </article>
     <?php

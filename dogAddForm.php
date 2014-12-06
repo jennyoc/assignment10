@@ -32,6 +32,7 @@ $yourURL = $domain . $phpSelf;
 // SECTION: 1c form variable
 // Initialize variables one for each form element
 // in the order they appear on the form
+$shelterId = "";
 $dogName = "";
 $breed = "";
 $size = "";
@@ -41,12 +42,13 @@ $coat = "";
 $color = "";
 $gender = "";
 $children = "";
-$shelterName = "";
-$fnkShelterId = "";
+
+
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1d form error flags
+$shelterIdERROR = false;
 $dogNameERROR = false;
 $breedERROR = false;
 $sizeERROR = false;
@@ -56,7 +58,7 @@ $coatERROR = false;
 $colorERROR = false;
 $genderERROR = false;
 $childrenERROR = false;
-$shelterNameERROR = false;
+
 
 
 
@@ -94,6 +96,8 @@ if (isset($_POST["btnSubmit"])) {
 // remove any potential JavaScript or html code from users input on the
 // form. Note it is best to follow the same order as declared in section 1c.
     
+    $shelterId = htmlentities($_POST["lstShelterId"], ENT_QUOTES, "UTF-8");
+    
     $dogName = htmlentities($_POST["txtDogName"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $dogName;
     
@@ -116,7 +120,7 @@ if (isset($_POST["btnSubmit"])) {
     
     $children = htmlentities($_POST["lstChildren"], ENT_QUOTES, "UTF-8");
     
-    $shelterName = htmlentities($_POST["lstShelterName"], ENT_QUOTES, "UTF-8");
+   
     
    
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -125,6 +129,10 @@ if (isset($_POST["btnSubmit"])) {
    
     
     // Validation section
+    if ($shelterId == ""){
+        $errorMsg[] = "Please select the shelter where this dog is located.";
+        $shelterIdERROR = true;
+    }
     
     if($dogName == "") {
         $errorMsg[] = "Please select the dog's name.";
@@ -143,11 +151,6 @@ if (isset($_POST["btnSubmit"])) {
         $genderERROR = true;
     }
     
-    if ($shelterName == ""){
-        $errorMsg[] = "Please select the shelter where this dog is located.";
-        $shelterNameERROR = true;
-    }
-
 // SECTION: 2d Process Form - Passed Validation
 //
 // Process for when the form passes validation (the errorMsg array is empty)
@@ -159,13 +162,13 @@ if (isset($_POST["btnSubmit"])) {
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         // SECTION: 2e Save Data
-
+                        
         $primaryKey = "";
         $dataEntered = false;
         try {
             $thisDatabase->db->beginTransaction();
-            $query = 'INSERT INTO tblDogs(fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldColor, fldGender, fldChildren) VALUES (?,?,?,?,?,?,?,?,?)';
-            $data = array($dogName, $breed, $size, $age, $stage, $coat, $color, $gender, $children); 
+            $query = 'INSERT INTO tblDogs(fnkShelterId, fldDogName, fldBreed, fldSize, fldAge, fldStage, fldCoat, fldColor, fldGender, fldChildren) VALUES (?,?,?,?,?,?,?,?,?,?)';
+            $data = array($shelterId, $dogName, $breed, $size, $age, $stage, $coat, $color, $gender, $children); 
             
             if ($debug) {
                 print "<p>sql " . $query;
@@ -178,6 +181,42 @@ if (isset($_POST["btnSubmit"])) {
             $primaryKey = $thisDatabase->lastInsert();
             if ($debug)
                 print "<p>pmk= " . $primaryKey;
+            
+            if ($size=='Small'){
+                            $sizeId = 1;
+                        }elseif ($size =='Medium'){
+                            $sizeId = 2;
+                        }elseif ($size =='Large'){
+                            $sizeId =3;
+                        }
+                            
+                        $query = "UPDATE tblDogs SET ";
+                        $query .= "fldSizeId = '$sizeId' ";
+                        
+                        $results = $thisDatabase->update($query);
+                        
+            if ($gender=='Male'){
+                            $genderId = 1;
+                        }elseif ($gender =='Female'){
+                            $genderId = 2;
+                        }
+                            
+                        $query = "UPDATE tblDogs SET ";
+                        $query .= "fldGenderId = '$genderId' ";
+                        
+                        $results = $thisDatabase->update($query);  
+            
+            if ($children=='Yes'){
+                            $childrenId = 1;
+                        }elseif ($children =='No'){
+                            $childrenId = 2;
+                        }
+                            
+                        $query = "UPDATE tblDogs SET ";
+                        $query .= "fldChildrenId = '$childrenId' ";
+                        
+                        $results = $thisDatabase->update($query);              
+                        
 
 // all sql statements are done so lets commit to our changes
             $dataEntered = $thisDatabase->db->commit();
@@ -259,9 +298,42 @@ include "include/header.php";
               method="post"
               id="frmAdd">
             <fieldset class="wrapper">
-                <legend>Add a dog today!</legend>
+                <legend>Add a dog:</legend>
                 <fieldset class="wrapperTwo">
                     <legend>Please complete the following form with as much of the dogs information that is known.<br> * denotes a required field.</legend>
+                    <?php
+                        $query = "SELECT DISTINCT fnkShelterId, fldShelterName ";
+                        $query .=" FROM tblDogs, tblShelters ";
+                        $query .="WHERE tblDogs.fnkShelterId = tblShelters.pmkShelterId";
+ 
+                        $shelterId = $thisDatabase->select($query);
+                        
+
+                        $output = array();
+                        $output[] = '<label for="lstShelterId" class="required">*Shelter Name: ';
+                        $output[] = '<select id="lstShelterId" ';
+                        $output[] = '        name="lstShelterId"';
+                        $output[] = '        tabindex="150" >';
+                        $output[] = '<option disabled="disabled" selected="selected">Shelter Name:</option>';
+                        
+
+
+                        foreach ($shelterId as $row) {
+
+                            $output[] = '<option ';
+                            if ($shelterId == $row["fnkShelterId"])
+                                $output[] = ' selected ';
+
+                            $output[] = 'value="' . $row["fnkShelterId"] . '">' . $row["fldShelterName"];
+
+                            $output[] = '</option>';
+                        }
+
+                        $output[] = '</select></label>';
+
+                        print join("\n", $output);  // this prints each line as a separate  line in html
+                        ?>
+                    
                         <label for="txtDogName" class="required">*Dog Name
                             <input type="text" id="txtDogName" name="txtDogName"
                                    value="<?php print $dogName; ?>"
@@ -280,9 +352,10 @@ include "include/header.php";
                         </label>
 
 
-                    <?php
+                    <?php                 
                         $query = "SELECT DISTINCT fldSize ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldSize IS NOT NULL ";
                         $query .= "ORDER BY tblDogs.fldSize DESC ";
 
                         $size = $thisDatabase->select($query);
@@ -322,7 +395,7 @@ include "include/header.php";
                     <?php
                         $query = "SELECT DISTINCT fldStage ";
                         $query .= "FROM tblDogs ";
-                        $query .= "ORDER BY tblDogs.fldStage DESC ";
+                        $query .= "WHERE fldStage IS NOT NULL ";
 
                         $stage = $thisDatabase->select($query);
 
@@ -353,6 +426,7 @@ include "include/header.php";
                         <?php
                         $query = "SELECT DISTINCT fldCoat ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldCoat IS NOT NULL ";
                         $query .= "ORDER BY tblDogs.fldCoat DESC ";
 
                         $coat = $thisDatabase->select($query);
@@ -424,6 +498,7 @@ include "include/header.php";
                         <?php
                         $query = "SELECT DISTINCT fldChildren ";
                         $query .= "FROM tblDogs ";
+                        $query .= "WHERE fldChildren IS NOT NULL ";
 
                         $children = $thisDatabase->select($query);
 
@@ -450,39 +525,7 @@ include "include/header.php";
 
                         print join("\n", $output);  // this prints each line as a separate  line in html
                         ?>
-                    
-                    <?php
-                        $query = "SELECT DISTINCT fldShelterName ";
-                        $query .= "FROM tblShelters ";
-
-                        $shelterName = $thisDatabase->select($query);
-
-                        $output = array();
-                        $output[] = '<label for="lstShelterName" class="required">*Shelter Name: ';
-                        $output[] = '<select id="lstShelterName" ';
-                        $output[] = '        name="lstShelterName"';
-                        $output[] = '        tabindex="150" >';
-                        $output[] = '<option disabled="disabled" selected="selected">Shelter Name:</option>';
-
-                        
-                        foreach ($shelterName as $row) {
-
-                            $output[] = '<option ';
-                            if ($shelterName == $row["fldShelterName"])
-                                $output[] = ' selected ';
-
-                            $output[] = 'value="' . $row["fldShelterName"] . '">' . $row["fldShelterName"];
-
-                            $output[] = '</option>';
-                        }
-
-                        $output[] = '</select></label>';
-
-                        print join("\n", $output);  // this prints each line as a separate  line in html
-                        ?>
-                    
-                    
-                            
+    
                         
                     </fieldset> <!-- ends contact -->
                 </fieldset> <!-- ends wrapper Two -->
